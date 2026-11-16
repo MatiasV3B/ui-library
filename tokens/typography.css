@@ -1,0 +1,78 @@
+/* ==========================================================================
+   UI Libary — Typography Tokens & Intentional Pairings
+   Rules:
+   - Never default to Inter or Geist without consulting guidelines/typography-pairings.md.
+   - Differentiate hierarchy via scale, weight, and tracking—not light-gray fading.
+   - Numeric tables and KPIs must apply font-variant-numeric: tabular-nums.
+   ========================================================================== */
+
+:root {
+  /* Curated Font Families (see guidelines/typography-pairings.md) */
+  --font-serif-editorial: "Newsreader", "Instrument Serif", Georgia, "Times New Roman", serif;
+  --font-sans-editorial: "Plus Jakarta Sans", "Helvetica Neue", Arial, sans-serif;
+
+  --font-sans-technical: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono-technical: "IBM Plex Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --font-display-geometric: "Plus Jakarta Sans", "Outfit", -apple-system, sans-serif;
+  --font-sans-geometric: "DM Sans", "Plus Jakarta Sans", -apple-system, sans-serif;
+
+  /* Active Default Pairing: Precision Technical / Editorial Swiss */
+  --font-display: var(--font-serif-editorial);
+  --font-sans: var(--font-sans-technical);
+  --font-mono: var(--font-mono-technical);
+
+  /* Type Scale (Fluid display + crisp UI steps) */
+  --text-xs: 0.75rem;      /* 12px — metadata, eyebrows, tabular badges */
+  --text-sm: 0.875rem;     /* 14px — secondary UI, dense lists, table cells */
+  --text-base: 1rem;       /* 16px — primary body copy */
+  --text-lg: 1.125rem;     /* 18px — lead paragraphs, card titles */
+  --text-xl: 1.375rem;     /* 22px — subsection headings */
+  --text-2xl: 1.75rem;     /* 28px — section headings */
+  --text-3xl: 2.25rem;     /* 36px — page titles */
+  --text-display-lg: clamp(2.5rem, 4.5vw, 3.75rem);
+  --text-display-xl: clamp(3rem, 6vw, 5rem);
+
+  /* Line Heights */
+  --leading-none: 1;
+  --leading-tight: 1.12;
+  --leading-snug: 1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.65;
+
+  /* Weights */
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* Tracking (Letter Spacing) */
+  --tracking-tighter: -0.035em;
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0em;
+  --tracking-wide: 0.03em;
+  --tracking-caps: 0.08em;
+}
+
+/* Optional Pairing Presets via data-typography attribute */
+[data-typography="editorial"] {
+  --font-display: var(--font-serif-editorial);
+  --font-sans: var(--font-sans-editorial);
+  --font-mono: var(--font-mono-technical);
+}
+
+[data-typography="technical"] {
+  --font-display: var(--font-sans-technical);
+  --font-sans: var(--font-sans-technical);
+  --font-mono: var(--font-mono-technical);
+}
+
+[data-typography="geometric"] {
+  --font-display: var(--font-display-geometric);
+  --font-sans: var(--font-sans-geometric);
+  --font-mono: var(--font-mono-technical);
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}

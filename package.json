@@ -1,0 +1,28 @@
+{
+  "name": "ui-libary",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Personal UI design system, primitives, curated motion components, and anti-AI-slop guidelines.",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "dev:site": "vite",
+    "build:site": "vite build",
+    "preview:site": "vite preview"
+  },
+  "dependencies": {
+    "lucide-react": "^0.511.0",
+    "motion": "^12.12.1",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.4",
+    "@types/react": "^19.1.4",
+    "@types/react-dom": "^19.1.3",
+    "@vitejs/plugin-react": "^4.4.1",
+    "tailwindcss": "^4.1.4",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5"
+  }
+}

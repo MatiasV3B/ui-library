@@ -1,0 +1,156 @@
+/* ==========================================================================
+   UI Libary — Semantic Color Tokens (Light & Dark)
+   Rules:
+   - No #09090b + purple/cyan/pink gradients or decorative neon glows.
+   - Maximum 1 primary accent per view + tonal neutral surfaces + 1px borders.
+   - Primary & secondary text maintain WCAG >= 4.5:1 contrast.
+   ========================================================================== */
+
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+
+  /* Surfaces */
+  --surface-canvas: #fafaf9;
+  --surface-elevated: #ffffff;
+  --surface-sunken: #f3f2ef;
+  --surface-interactive: #eceae5;
+  --surface-inverse: #141413;
+  --surface-overlay: rgba(20, 20, 19, 0.48);
+
+  /* Typography */
+  --text-primary: #141413;
+  --text-secondary: #52514d;
+  --text-muted: #6b6a65;
+  --text-inverse: #fafaf9;
+
+  /* Borders (crisp 1px hairlines) */
+  --border-subtle: #e7e5e0;
+  --border-default: #d6d3cc;
+  --border-strong: #a8a49c;
+
+  /* Single Primary Accent (Signal Cobalt) */
+  --accent-primary: #1d4ed8;
+  --accent-primary-hover: #1e40af;
+  --accent-primary-foreground: #ffffff;
+  --accent-primary-subtle: #eff4ff;
+  --accent-primary-border: #bfdbfe;
+
+  /* Semantic Feedback (state communication only) */
+  --status-success: #15803d;
+  --status-success-subtle: #f0fdf4;
+  --status-warning: #b45309;
+  --status-warning-subtle: #fffbeb;
+  --status-danger: #b91c1c;
+  --status-danger-subtle: #fef2f2;
+
+  /* Focus Ring */
+  --focus-ring: #1d4ed8;
+  --focus-ring-offset: #fafaf9;
+
+  /* Skeleton Shimmer Tones */
+  --skeleton-base: #eceae5;
+  --skeleton-highlight: #f5f4f1;
+
+  /* Astryx / shadcn Token Aliases */
+  --background: var(--surface-canvas);
+  --foreground: var(--text-primary);
+  --card: var(--surface-elevated);
+  --card-foreground: var(--text-primary);
+  --muted: var(--surface-sunken);
+  --muted-foreground: var(--text-muted);
+  --accent: var(--surface-interactive);
+  --accent-foreground: var(--text-primary);
+  --primary: var(--accent-primary);
+  --primary-foreground: var(--accent-primary-foreground);
+  --border: var(--border-default);
+  --ring: var(--focus-ring);
+}
+
+.dark,
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Surfaces (Warm Obsidian — never #09090b) */
+  --surface-canvas: #121211;
+  --surface-elevated: #1b1b19;
+  --surface-sunken: #0d0d0c;
+  --surface-interactive: #252522;
+  --surface-inverse: #f5f4f1;
+  --surface-overlay: rgba(8, 8, 7, 0.72);
+
+  /* Typography */
+  --text-primary: #f5f4f1;
+  --text-secondary: #b5b3ac;
+  --text-muted: #8e8c85;
+  --text-inverse: #141413;
+
+  /* Borders */
+  --border-subtle: #262623;
+  --border-default: #353531;
+  --border-strong: #52514c;
+
+  /* Single Primary Accent (Signal Cobalt — Dark calibrated) */
+  --accent-primary: #60a5fa;
+  --accent-primary-hover: #93c5fd;
+  --accent-primary-foreground: #0d1117;
+  --accent-primary-subtle: rgba(96, 165, 250, 0.14);
+  --accent-primary-border: rgba(96, 165, 250, 0.35);
+
+  /* Semantic Feedback */
+  --status-success: #4ade80;
+  --status-success-subtle: rgba(74, 222, 128, 0.12);
+  --status-warning: #fbbf24;
+  --status-warning-subtle: rgba(251, 191, 36, 0.12);
+  --status-danger: #f87171;
+  --status-danger-subtle: rgba(248, 113, 113, 0.12);
+
+  /* Focus Ring */
+  --focus-ring: #60a5fa;
+  --focus-ring-offset: #121211;
+
+  /* Skeleton Shimmer Tones */
+  --skeleton-base: #22221f;
+  --skeleton-highlight: #2c2c28;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --surface-canvas: #121211;
+    --surface-elevated: #1b1b19;
+    --surface-sunken: #0d0d0c;
+    --surface-interactive: #252522;
+    --surface-inverse: #f5f4f1;
+    --surface-overlay: rgba(8, 8, 7, 0.72);
+
+    --text-primary: #f5f4f1;
+    --text-secondary: #b5b3ac;
+    --text-muted: #8e8c85;
+    --text-inverse: #141413;
+
+    --border-subtle: #262623;
+    --border-default: #353531;
+    --border-strong: #52514c;
+
+    --accent-primary: #60a5fa;
+    --accent-primary-hover: #93c5fd;
+    --accent-primary-foreground: #0d1117;
+    --accent-primary-subtle: rgba(96, 165, 250, 0.14);
+    --accent-primary-border: rgba(96, 165, 250, 0.35);
+
+    --status-success: #4ade80;
+    --status-success-subtle: rgba(74, 222, 128, 0.12);
+    --status-warning: #fbbf24;
+    --status-warning-subtle: rgba(251, 191, 36, 0.12);
+    --status-danger: #f87171;
+    --status-danger-subtle: rgba(248, 113, 113, 0.12);
+
+    --focus-ring: #60a5fa;
+    --focus-ring-offset: #121211;
+
+    --skeleton-base: #22221f;
+    --skeleton-highlight: #2c2c28;
+  }
+}

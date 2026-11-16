@@ -1,0 +1,267 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "ui-libary",
+  "homepage": "https://matiasv3b.github.io/ui-library/",
+  "items": [
+    {
+      "name": "design-tokens",
+      "type": "registry:style",
+      "title": "UI-Libary Design Tokens",
+      "description": "Semantic light/dark CSS variables, intentional typography pairings, concentric border radii, and Apple-calibrated motion curves.",
+      "files": [
+        {
+          "path": "tokens/colors.css",
+          "type": "registry:file",
+          "target": "styles/tokens/colors.css"
+        },
+        {
+          "path": "tokens/typography.css",
+          "type": "registry:file",
+          "target": "styles/tokens/typography.css"
+        },
+        {
+          "path": "tokens/spacing-motion.css",
+          "type": "registry:file",
+          "target": "styles/tokens/spacing-motion.css"
+        }
+      ]
+    },
+    {
+      "name": "motion-tokens",
+      "type": "registry:lib",
+      "title": "Apple-Calibrated Motion Presets",
+      "description": "Shared spring physics (tactile 380/32/0.8, fluid 240/28) and Apple deceleration curve cubic-bezier(0.22, 1, 0.36, 1) for motion/react.",
+      "dependencies": ["motion"],
+      "files": [
+        {
+          "path": "components/motion/motion-tokens.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "action-button",
+      "type": "registry:ui",
+      "title": "Action Button Primitive",
+      "description": "Accessible button primitive with primary/secondary/outline/ghost variants, tactile scale compression (0.97), and loading state.",
+      "dependencies": ["motion"],
+      "registryDependencies": ["design-tokens", "motion-tokens"],
+      "files": [
+        {
+          "path": "primitives/radix/ActionButton.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "surface-card",
+      "type": "registry:ui",
+      "title": "Surface Card Primitive",
+      "description": "Composable card primitives (Header, Title, Description, Content, Footer) built with crisp 1px hairline borders and tonal surface tokens.",
+      "registryDependencies": ["design-tokens"],
+      "files": [
+        {
+          "path": "primitives/radix/SurfaceCard.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "tactile-tabs",
+      "type": "registry:component",
+      "title": "Tactile Tabs & Dock",
+      "description": "Tabs and Dock switcher with shared layoutId indicator, tactile spring (380/32/0.8), WAI-ARIA keyboard navigation, AnimatePresence mode='popLayout', and skeleton/empty/error states.",
+      "dependencies": ["motion", "lucide-react"],
+      "registryDependencies": ["design-tokens", "motion-tokens"],
+      "files": [
+        {
+          "path": "components/motion/TactileTabs.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "app-store-card",
+      "type": "registry:component",
+      "title": "App Store Expandable Card",
+      "description": "Expandable detail card with shared layoutId spatial continuity, AnimatePresence mode='popLayout', fluid spring (240/28), drag-to-dismiss gesture, focus restoration, and skeleton/error states.",
+      "dependencies": ["motion", "lucide-react"],
+      "registryDependencies": ["design-tokens", "motion-tokens"],
+      "files": [
+        {
+          "path": "components/motion/AppStoreCard.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "sticky-product-showcase",
+      "type": "registry:component",
+      "title": "Sticky Product Showcase",
+      "description": "Scroll-linked Apple-style product narrative using useScroll, useTransform, progressive clip-path aperture, sticky stage parallax, and accessible chapter controls.",
+      "dependencies": ["motion", "lucide-react"],
+      "registryDependencies": ["design-tokens", "motion-tokens"],
+      "files": [
+        {
+          "path": "components/motion/StickyProductShowcase.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "segmented-control",
+      "type": "registry:component",
+      "title": "Segmented Control",
+      "description": "Curated 21st.dev radiogroup switcher upgraded with layoutId tactile spring, arrow-key navigation, and semantic surface tokens.",
+      "dependencies": ["motion"],
+      "registryDependencies": ["design-tokens", "motion-tokens"],
+      "files": [
+        {
+          "path": "components/21st-dev/SegmentedControl.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "action-search-bar",
+      "type": "registry:component",
+      "title": "Action Search Bar",
+      "description": "Curated 21st.dev command filter input with ArrowUp/ArrowDown/Enter/Escape keyboard navigation, AnimatePresence mode='popLayout', and empty state.",
+      "dependencies": ["motion", "lucide-react"],
+      "registryDependencies": ["design-tokens", "motion-tokens"],
+      "files": [
+        {
+          "path": "components/21st-dev/ActionSearchBar.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "file-tree",
+      "type": "registry:component",
+      "title": "File Tree Explorer",
+      "description": "Curated 21st.dev repository directory viewer with tactile disclosure chevrons, keyboard focus rings, and token styling.",
+      "dependencies": ["motion", "lucide-react"],
+      "registryDependencies": ["design-tokens", "motion-tokens"],
+      "files": [
+        {
+          "path": "components/21st-dev/FileTree.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "scroll-progress",
+      "type": "registry:component",
+      "title": "Hairline Scroll Progress",
+      "description": "GPU-composited scaleX top reading indicator using the single --accent-primary token without multi-color gradients.",
+      "dependencies": ["motion"],
+      "registryDependencies": ["design-tokens"],
+      "files": [
+        {
+          "path": "components/21st-dev/ScrollProgress.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "pricing-selector",
+      "type": "registry:component",
+      "title": "Pricing Selector",
+      "description": "Curated 21st.dev plan selector refactored with layoutId billing toggle, spring selection ring, and tabular-nums pricing.",
+      "dependencies": ["motion", "lucide-react"],
+      "registryDependencies": ["design-tokens", "motion-tokens"],
+      "files": [
+        {
+          "path": "components/21st-dev/PricingSelector.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "kpi-metric-card",
+      "type": "registry:component",
+      "title": "KPI Metric Card",
+      "description": "Data-viz summary card with right-aligned tabular-nums metrics, semantic delta indicators, and skeleton/error variants.",
+      "dependencies": ["motion", "lucide-react"],
+      "registryDependencies": ["design-tokens", "motion-tokens"],
+      "files": [
+        {
+          "path": "components/data-viz/KpiMetricCard.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "state-notice",
+      "type": "registry:component",
+      "title": "Feedback State Notices",
+      "description": "Composable EmptyState, ErrorNotice, and SkeletonBlock feedback primitives matching real interface layouts.",
+      "dependencies": ["motion", "lucide-react"],
+      "registryDependencies": ["design-tokens", "motion-tokens"],
+      "files": [
+        {
+          "path": "components/feedback/StateNotice.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "hero-editorial",
+      "type": "registry:block",
+      "title": "Hero Editorial Pattern",
+      "description": "Asymmetric 50/50 split hero pairing concrete thesis copy and tabular specs with a live interactive artifact.",
+      "dependencies": ["motion", "lucide-react"],
+      "registryDependencies": ["design-tokens", "motion-tokens"],
+      "files": [
+        {
+          "path": "patterns/hero-editorial/HeroEditorial.tsx",
+          "type": "registry:block"
+        },
+        {
+          "path": "patterns/hero-editorial/README.md",
+          "type": "registry:file",
+          "target": "patterns/hero-editorial/README.md"
+        }
+      ]
+    },
+    {
+      "name": "dashboard-shell",
+      "type": "registry:block",
+      "title": "Dashboard Shell Pattern",
+      "description": "Persistent workspace sidebar with layoutId active indicator, tabular item counts, and structured header/content slots.",
+      "dependencies": ["motion"],
+      "registryDependencies": ["design-tokens", "motion-tokens"],
+      "files": [
+        {
+          "path": "patterns/dashboard-shell/DashboardShell.tsx",
+          "type": "registry:block"
+        },
+        {
+          "path": "patterns/dashboard-shell/README.md",
+          "type": "registry:file",
+          "target": "patterns/dashboard-shell/README.md"
+        }
+      ]
+    },
+    {
+      "name": "auth-minimal",
+      "type": "registry:block",
+      "title": "Auth Minimal Pattern",
+      "description": "Focused passwordless email sign-in surface with explicit idle, loading, inline validation error, and sent states.",
+      "dependencies": ["motion", "lucide-react"],
+      "registryDependencies": ["design-tokens", "motion-tokens"],
+      "files": [
+        {
+          "path": "patterns/auth-minimal/AuthMinimal.tsx",
+          "type": "registry:block"
+        },
+        {
+          "path": "patterns/auth-minimal/README.md",
+          "type": "registry:file",
+          "target": "patterns/auth-minimal/README.md"
+        }
+      ]
+    }
+  ]
+}
