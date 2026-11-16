@@ -62,7 +62,7 @@ function TreeRow({
         onClick={() => onSelectFile?.(node)}
         style={{ paddingLeft: `${indentPx}px` }}
         className={cx(
-          "flex w-full items-center justify-between gap-[var(--space-2)] rounded-[var(--radius-sm)] pr-[var(--space-2)] py-[var(--space-1)] text-left text-[var(--text-xs)]",
+          "flex w-full items-center justify-between gap-[var(--space-2)] rounded-[var(--radius-sm)] pr-[var(--space-2)] py-[var(--space-1)] text-left text-[length:var(--text-xs)]",
           "transition-colors duration-[var(--duration-fast)]",
           isSelected
             ? "bg-[var(--accent-primary-subtle)] text-[var(--accent-primary)] font-medium"
@@ -72,10 +72,10 @@ function TreeRow({
       >
         <span className="flex items-center gap-[var(--space-2)] truncate">
           <FileText className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-          <span className="truncate font-[var(--font-mono)]">{node.name}</span>
+          <span className="truncate font-[family-name:var(--font-mono)]">{node.name}</span>
         </span>
         {node.meta ? (
-          <span className="shrink-0 font-[var(--font-mono)] text-[11px] text-[var(--text-muted)]">
+          <span className="shrink-0 font-[family-name:var(--font-mono)] text-[11px] text-[var(--text-muted)]">
             {node.meta}
           </span>
         ) : null}
@@ -93,7 +93,7 @@ function TreeRow({
         onClick={() => toggleDir(node.id)}
         style={{ paddingLeft: `${indentPx}px` }}
         className={cx(
-          "flex w-full items-center gap-[var(--space-2)] rounded-[var(--radius-sm)] pr-[var(--space-2)] py-[var(--space-1)] text-left text-[var(--text-xs)] font-medium text-[var(--text-primary)]",
+          "flex w-full items-center gap-[var(--space-2)] rounded-[var(--radius-sm)] pr-[var(--space-2)] py-[var(--space-1)] text-left text-[length:var(--text-xs)] font-medium text-[var(--text-primary)]",
           "transition-colors duration-[var(--duration-fast)] hover:bg-[var(--surface-interactive)]",
           "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]"
         )}
@@ -116,7 +116,7 @@ function TreeRow({
             aria-hidden="true"
           />
         )}
-        <span className="truncate font-[var(--font-mono)]">{node.name}</span>
+        <span className="truncate font-[family-name:var(--font-mono)]">{node.name}</span>
       </motion.button>
 
       <AnimatePresence initial={false}>
@@ -178,7 +178,7 @@ export function FileTree({
       <nav
         aria-label="Repository file structure"
         className={cx(
-          "w-full rounded-[var(--radius-xl)] border border-[var(--border-subtle)] bg-[var(--surface-elevated)] p-[var(--space-3)] font-[var(--font-sans)] shadow-[var(--shadow-hairline)]",
+          "w-full rounded-[var(--radius-xl)] border border-[var(--border-subtle)] bg-[var(--surface-elevated)] p-[var(--space-3)] font-[family-name:var(--font-sans)] shadow-[var(--shadow-hairline)]",
           className
         )}
       >

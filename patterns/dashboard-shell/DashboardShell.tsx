@@ -41,17 +41,17 @@ export function DashboardShell({
     <MotionConfig reducedMotion="user">
       <div
         className={cx(
-          "grid min-h-[420px] w-full grid-cols-1 overflow-hidden rounded-[var(--radius-xl)] border border-[var(--border-default)] bg-[var(--surface-canvas)] font-[var(--font-sans)] text-[var(--text-primary)] shadow-[var(--shadow-card)] md:grid-cols-[220px_1fr]",
+          "grid min-h-[420px] w-full grid-cols-1 overflow-hidden rounded-[var(--radius-xl)] border border-[var(--border-default)] bg-[var(--surface-canvas)] font-[family-name:var(--font-sans)] text-[var(--text-primary)] shadow-[var(--shadow-card)] md:grid-cols-[220px_1fr]",
           className
         )}
       >
         <aside className="flex flex-col justify-between border-b border-[var(--border-subtle)] bg-[var(--surface-sunken)] p-[var(--space-4)] md:border-b-0 md:border-r">
           <div className="space-y-[var(--space-5)]">
             <div className="px-[var(--space-2)]">
-              <span className="font-[var(--font-mono)] text-[var(--text-xs)] font-semibold uppercase tracking-[var(--tracking-caps)] text-[var(--text-muted)]">
+              <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] font-semibold uppercase tracking-[var(--tracking-caps)] text-[var(--text-muted)]">
                 Workspace
               </span>
-              <p className="mt-0.5 text-[var(--text-sm)] font-semibold text-[var(--text-primary)]">
+              <p className="mt-0.5 text-[length:var(--text-sm)] font-semibold text-[var(--text-primary)]">
                 {workspaceName}
               </p>
             </div>
@@ -70,7 +70,7 @@ export function DashboardShell({
                     transition={TACTILE_SPRING}
                     onClick={() => onSelectNav(item.id)}
                     className={cx(
-                      "relative z-0 flex w-full items-center justify-between gap-[var(--space-2)] rounded-[var(--radius-md)] px-[var(--space-3)] py-[var(--space-2)] text-left text-[var(--text-sm)] font-medium",
+                      "relative z-0 flex w-full items-center justify-between gap-[var(--space-2)] rounded-[var(--radius-md)] px-[var(--space-3)] py-[var(--space-2)] text-left text-[length:var(--text-sm)] font-medium",
                       "transition-colors duration-[var(--duration-fast)]",
                       isActive
                         ? "text-[var(--text-primary)]"
@@ -102,7 +102,7 @@ export function DashboardShell({
                       <span className="truncate">{item.label}</span>
                     </span>
                     {typeof item.badge === "number" ? (
-                      <span className="tabular-nums font-[var(--font-mono)] text-[var(--text-xs)] text-[var(--text-muted)]">
+                      <span className="tabular-nums font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-[var(--text-muted)]">
                         {item.badge}
                       </span>
                     ) : null}

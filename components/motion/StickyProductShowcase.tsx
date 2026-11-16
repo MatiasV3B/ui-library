@@ -116,28 +116,28 @@ function ChapterRow({
         )}
       >
         <div className="flex items-center justify-between gap-[var(--space-3)]">
-          <span className="font-[var(--font-mono)] text-[var(--text-xs)] font-semibold uppercase tracking-[var(--tracking-caps)] text-[var(--accent-primary)]">
+          <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] font-semibold uppercase tracking-[var(--tracking-caps)] text-[var(--accent-primary)]">
             {chapter.eyebrow}
           </span>
-          <span className="tabular-nums font-[var(--font-mono)] text-[var(--text-xs)] text-[var(--text-muted)]">
+          <span className="tabular-nums font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-[var(--text-muted)]">
             {chapter.indexLabel}
           </span>
         </div>
 
-        <h3 className="font-[var(--font-display)] text-[var(--text-xl)] font-semibold leading-[var(--leading-snug)] tracking-[var(--tracking-tight)] text-[var(--text-primary)]">
+        <h3 className="font-[family-name:var(--font-display)] text-[length:var(--text-xl)] font-semibold leading-[var(--leading-snug)] tracking-[var(--tracking-tight)] text-[var(--text-primary)]">
           {chapter.title}
         </h3>
 
-        <p className="max-w-[46ch] text-[var(--text-sm)] leading-[var(--leading-normal)] text-[var(--text-secondary)]">
+        <p className="max-w-[46ch] text-[length:var(--text-sm)] leading-[var(--leading-normal)] text-[var(--text-secondary)]">
           {chapter.description}
         </p>
 
         {chapter.metric ? (
           <div className="mt-[var(--space-1)] flex items-baseline justify-between border-t border-[var(--border-subtle)] pt-[var(--space-2)]">
-            <span className="text-[var(--text-xs)] text-[var(--text-muted)]">
+            <span className="text-[length:var(--text-xs)] text-[var(--text-muted)]">
               {chapter.metric.label}
             </span>
-            <span className="tabular-nums font-[var(--font-mono)] text-[var(--text-sm)] font-semibold text-[var(--text-primary)]">
+            <span className="tabular-nums font-[family-name:var(--font-mono)] text-[length:var(--text-sm)] font-semibold text-[var(--text-primary)]">
               {chapter.metric.value}
             </span>
           </div>
@@ -214,14 +214,14 @@ export function StickyProductShowcase({
           minHeight: `${Math.max(chapters.length, 2) * 90}vh`,
         }}
         className={cx(
-          "relative w-full overflow-x-clip bg-[var(--surface-canvas)] font-[var(--font-sans)] text-[var(--text-primary)]",
+          "relative w-full overflow-x-clip bg-[var(--surface-canvas)] font-[family-name:var(--font-sans)] text-[var(--text-primary)]",
           className
         )}
       >
         <div className="sticky top-0 flex min-h-screen items-center py-[var(--space-8)] lg:py-[var(--space-12)]">
           <div className="mx-auto w-full max-w-[var(--container-ui)] px-[var(--space-4)] sm:px-[var(--space-6)] lg:px-[var(--space-8)]">
             <div className="mb-[var(--space-6)] flex items-center justify-between gap-[var(--space-4)]">
-              <span className="font-[var(--font-mono)] text-[var(--text-xs)] font-semibold uppercase tracking-[var(--tracking-caps)] text-[var(--text-secondary)]">
+              <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] font-semibold uppercase tracking-[var(--tracking-caps)] text-[var(--text-secondary)]">
                 {sectionLabel}
               </span>
 
@@ -263,7 +263,7 @@ export function StickyProductShowcase({
                       className={cx(
                         "inline-flex items-center gap-[var(--space-2)] rounded-[var(--radius-md)]",
                         "bg-[var(--accent-primary)] px-[var(--space-4)] py-[var(--space-3)]",
-                        "text-[var(--text-sm)] font-semibold text-[var(--accent-primary-foreground)]",
+                        "text-[length:var(--text-sm)] font-semibold text-[var(--accent-primary-foreground)]",
                         "transition-colors duration-[var(--duration-fast)] hover:bg-[var(--accent-primary-hover)]",
                         "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]"
                       )}
@@ -355,10 +355,10 @@ export function StickyProductShowcaseEmpty({
       <div className="inline-flex h-9 w-9 items-center justify-center rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--surface-elevated)] text-[var(--text-secondary)]">
         <Layers className="h-4 w-4" aria-hidden="true" />
       </div>
-      <p className="text-[var(--text-base)] font-semibold text-[var(--text-primary)]">
+      <p className="text-[length:var(--text-base)] font-semibold text-[var(--text-primary)]">
         {title}
       </p>
-      <p className="max-w-[52ch] text-[var(--text-sm)] text-[var(--text-secondary)]">
+      <p className="max-w-[52ch] text-[length:var(--text-sm)] text-[var(--text-secondary)]">
         {description}
       </p>
     </div>
@@ -386,9 +386,9 @@ export function StickyProductShowcaseError({
     >
       <div className="flex items-center gap-[var(--space-2)] text-[var(--status-danger)]">
         <AlertCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
-        <p className="text-[var(--text-sm)] font-semibold">{title}</p>
+        <p className="text-[length:var(--text-sm)] font-semibold">{title}</p>
       </div>
-      <p className="max-w-[56ch] text-[var(--text-sm)] text-[var(--text-primary)]">
+      <p className="max-w-[56ch] text-[length:var(--text-sm)] text-[var(--text-primary)]">
         {description}
       </p>
       {onRetry ? (
@@ -397,7 +397,7 @@ export function StickyProductShowcaseError({
           whileTap={{ scale: 0.97 }}
           transition={TACTILE_SPRING}
           onClick={onRetry}
-          className="inline-flex items-center gap-[var(--space-2)] rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--surface-elevated)] px-[var(--space-3)] py-[var(--space-2)] text-[var(--text-xs)] font-semibold text-[var(--text-primary)] hover:bg-[var(--surface-interactive)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]"
+          className="inline-flex items-center gap-[var(--space-2)] rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--surface-elevated)] px-[var(--space-3)] py-[var(--space-2)] text-[length:var(--text-xs)] font-semibold text-[var(--text-primary)] hover:bg-[var(--surface-interactive)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]"
         >
           <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
           <span>Retry</span>

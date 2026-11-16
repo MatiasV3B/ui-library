@@ -80,7 +80,7 @@ export function SegmentedControl<T extends string = string>({
         role="radiogroup"
         aria-label={ariaLabel}
         className={cx(
-          "inline-flex items-center gap-[var(--space-1)] rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--surface-sunken)] p-[var(--space-1)] font-[var(--font-sans)]",
+          "inline-flex items-center gap-[var(--space-1)] rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--surface-sunken)] p-[var(--space-1)] font-[family-name:var(--font-sans)]",
           className
         )}
       >
@@ -101,7 +101,7 @@ export function SegmentedControl<T extends string = string>({
               onClick={() => select(option.value)}
               onKeyDown={(e) => handleKeyDown(e, index)}
               className={cx(
-                "relative z-0 rounded-[var(--radius-sm)] px-[var(--space-3)] py-[var(--space-1)] text-[var(--text-xs)] font-medium select-none",
+                "relative z-0 rounded-[var(--radius-sm)] px-[var(--space-3)] py-[var(--space-1)] text-[length:var(--text-xs)] font-medium select-none",
                 "transition-colors duration-[var(--duration-fast)]",
                 isSelected
                   ? "text-[var(--text-primary)]"

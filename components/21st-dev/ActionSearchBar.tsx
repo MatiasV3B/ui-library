@@ -81,7 +81,7 @@ export function ActionSearchBar({
     <MotionConfig reducedMotion="user">
       <div
         className={cx(
-          "w-full rounded-[var(--radius-xl)] border border-[var(--border-default)] bg-[var(--surface-elevated)] p-[var(--space-2)] font-[var(--font-sans)] shadow-[var(--shadow-card)]",
+          "w-full rounded-[var(--radius-xl)] border border-[var(--border-default)] bg-[var(--surface-elevated)] p-[var(--space-2)] font-[family-name:var(--font-sans)] shadow-[var(--shadow-card)]",
           className
         )}
       >
@@ -105,7 +105,7 @@ export function ActionSearchBar({
             onKeyDown={handleKeyDown}
             placeholder={placeholder}
             className={cx(
-              "h-10 flex-1 bg-transparent text-[var(--text-sm)] text-[var(--text-primary)] placeholder:text-[var(--text-muted)]",
+              "h-10 flex-1 bg-transparent text-[length:var(--text-sm)] text-[var(--text-primary)] placeholder:text-[var(--text-muted)]",
               "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)] rounded-[var(--radius-sm)]"
             )}
           />
@@ -151,7 +151,7 @@ export function ActionSearchBar({
                     onMouseEnter={() => setHighlightedIndex(idx)}
                     onClick={() => onSelect?.(item)}
                     className={cx(
-                      "group flex w-full items-center justify-between gap-[var(--space-3)] rounded-[var(--radius-md)] px-[var(--space-3)] py-[var(--space-2)] text-left text-[var(--text-sm)]",
+                      "group flex w-full items-center justify-between gap-[var(--space-3)] rounded-[var(--radius-md)] px-[var(--space-3)] py-[var(--space-2)] text-left text-[length:var(--text-sm)]",
                       "transition-colors duration-[var(--duration-fast)]",
                       isHighlighted
                         ? "bg-[var(--surface-interactive)] text-[var(--text-primary)]"
@@ -162,7 +162,7 @@ export function ActionSearchBar({
                     <span className="flex items-center gap-[var(--space-2)] truncate">
                       <span className="font-medium">{item.label}</span>
                       {item.category ? (
-                        <span className="font-[var(--font-mono)] text-[var(--text-xs)] text-[var(--text-muted)]">
+                        <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-[var(--text-muted)]">
                           {item.category}
                         </span>
                       ) : null}
@@ -170,7 +170,7 @@ export function ActionSearchBar({
 
                     <span className="flex items-center gap-[var(--space-2)] shrink-0">
                       {item.shortcut ? (
-                        <kbd className="rounded-[var(--radius-xs)] border border-[var(--border-default)] bg-[var(--surface-canvas)] px-[var(--space-1)] py-0.5 font-[var(--font-mono)] text-[var(--text-xs)] text-[var(--text-muted)]">
+                        <kbd className="rounded-[var(--radius-xs)] border border-[var(--border-default)] bg-[var(--surface-canvas)] px-[var(--space-1)] py-0.5 font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-[var(--text-muted)]">
                           {item.shortcut}
                         </kbd>
                       ) : null}
@@ -193,7 +193,7 @@ export function ActionSearchBar({
                 initial={shouldReduceMotion ? false : { opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="px-[var(--space-3)] py-[var(--space-6)] text-center text-[var(--text-xs)] text-[var(--text-muted)]"
+                className="px-[var(--space-3)] py-[var(--space-6)] text-center text-[length:var(--text-xs)] text-[var(--text-muted)]"
               >
                 {emptyMessage}
               </motion.div>

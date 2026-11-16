@@ -55,7 +55,7 @@ export function AppStoreCardGroup({
       <LayoutGroup id={`app-store-group-${groupId}`}>
         <div
           data-slot="app-store-card-group"
-          className={cx("font-[var(--font-sans)]", className)}
+          className={cx("font-[family-name:var(--font-sans)]", className)}
         >
           {children}
         </div>
@@ -211,7 +211,7 @@ export function AppStoreCardEyebrow({
       layoutId={`card-eyebrow-${id}`}
       transition={shouldReduceMotion ? { duration: 0 } : FLUID_SPRING}
       className={cx(
-        "inline-block font-[var(--font-mono)] text-[var(--text-xs)] font-semibold uppercase tracking-[var(--tracking-caps)] text-[var(--accent-primary)]",
+        "inline-block font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] font-semibold uppercase tracking-[var(--tracking-caps)] text-[var(--accent-primary)]",
         className
       )}
     >
@@ -235,7 +235,7 @@ export function AppStoreCardTitle({
       layoutId={`card-title-${id}`}
       transition={shouldReduceMotion ? { duration: 0 } : FLUID_SPRING}
       className={cx(
-        "font-[var(--font-display)] text-[var(--text-2xl)] font-semibold leading-[var(--leading-tight)] tracking-[var(--tracking-tight)] text-[var(--text-primary)]",
+        "font-[family-name:var(--font-display)] text-[length:var(--text-2xl)] font-semibold leading-[var(--leading-tight)] tracking-[var(--tracking-tight)] text-[var(--text-primary)]",
         className
       )}
     >
@@ -254,7 +254,7 @@ export function AppStoreCardSummary({
   return (
     <p
       className={cx(
-        "text-[var(--text-sm)] leading-[var(--leading-normal)] text-[var(--text-secondary)]",
+        "text-[length:var(--text-sm)] leading-[var(--leading-normal)] text-[var(--text-secondary)]",
         className
       )}
     >
@@ -380,7 +380,7 @@ export function AppStoreCardDetail({
                       transition={
                         shouldReduceMotion ? { duration: 0 } : FLUID_SPRING
                       }
-                      className="inline-block font-[var(--font-mono)] text-[var(--text-xs)] font-semibold uppercase tracking-[var(--tracking-caps)] text-[var(--accent-primary)]"
+                      className="inline-block font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] font-semibold uppercase tracking-[var(--tracking-caps)] text-[var(--accent-primary)]"
                     >
                       {eyebrow}
                     </motion.span>
@@ -392,13 +392,13 @@ export function AppStoreCardDetail({
                     transition={
                       shouldReduceMotion ? { duration: 0 } : FLUID_SPRING
                     }
-                    className="font-[var(--font-display)] text-[var(--text-3xl)] font-semibold leading-[var(--leading-tight)] tracking-[var(--tracking-tight)] text-[var(--text-primary)]"
+                    className="font-[family-name:var(--font-display)] text-[length:var(--text-3xl)] font-semibold leading-[var(--leading-tight)] tracking-[var(--tracking-tight)] text-[var(--text-primary)]"
                   >
                     {title}
                   </motion.h2>
 
                   {subtitle ? (
-                    <p className="max-w-[60ch] text-[var(--text-base)] leading-[var(--leading-normal)] text-[var(--text-secondary)]">
+                    <p className="max-w-[60ch] text-[length:var(--text-base)] leading-[var(--leading-normal)] text-[var(--text-secondary)]">
                       {subtitle}
                     </p>
                   ) : null}
@@ -488,9 +488,9 @@ export function AppStoreCardError({
       <div className="space-y-[var(--space-2)]">
         <div className="flex items-center gap-[var(--space-2)] text-[var(--status-danger)]">
           <AlertCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
-          <p className="text-[var(--text-sm)] font-semibold">{title}</p>
+          <p className="text-[length:var(--text-sm)] font-semibold">{title}</p>
         </div>
-        <p className="text-[var(--text-sm)] text-[var(--text-primary)]">
+        <p className="text-[length:var(--text-sm)] text-[var(--text-primary)]">
           {description}
         </p>
       </div>
@@ -500,7 +500,7 @@ export function AppStoreCardError({
           whileTap={{ scale: 0.97 }}
           transition={TACTILE_SPRING}
           onClick={onRetry}
-          className="inline-flex w-fit items-center gap-[var(--space-2)] rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--surface-elevated)] px-[var(--space-3)] py-[var(--space-2)] text-[var(--text-xs)] font-semibold text-[var(--text-primary)] hover:bg-[var(--surface-interactive)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]"
+          className="inline-flex w-fit items-center gap-[var(--space-2)] rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--surface-elevated)] px-[var(--space-3)] py-[var(--space-2)] text-[length:var(--text-xs)] font-semibold text-[var(--text-primary)] hover:bg-[var(--surface-interactive)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]"
         >
           <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
           <span>{retryLabel}</span>

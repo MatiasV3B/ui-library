@@ -147,7 +147,7 @@ export function TactileTabs({
           data-variant={variant}
           data-orientation={orientation}
           className={cx(
-            "font-[var(--font-sans)] text-[var(--text-primary)]",
+            "font-[family-name:var(--font-sans)] text-[var(--text-primary)]",
             orientation === "vertical" && "flex items-start gap-[var(--space-6)]",
             className
           )}
@@ -280,7 +280,7 @@ export function TactileTabsTrigger({
       data-state={isActive ? "active" : "inactive"}
       className={cx(
         "relative z-0 inline-flex items-center justify-center gap-[var(--space-2)] select-none whitespace-nowrap",
-        "text-[var(--text-sm)] font-medium tracking-[var(--tracking-normal)] transition-colors duration-[var(--duration-fast)]",
+        "text-[length:var(--text-sm)] font-medium tracking-[var(--tracking-normal)] transition-colors duration-[var(--duration-fast)]",
         isDock
           ? "rounded-[var(--radius-pill)] px-[var(--space-4)] py-[var(--space-2)]"
           : "rounded-[var(--radius-md)] px-[var(--space-3)] py-[var(--space-2)]",
@@ -326,7 +326,7 @@ export function TactileTabsTrigger({
       {typeof count === "number" ? (
         <span
           className={cx(
-            "tabular-nums rounded-[var(--radius-pill)] px-[var(--space-2)] py-0.5 font-[var(--font-mono)] text-[var(--text-xs)] leading-none",
+            "tabular-nums rounded-[var(--radius-pill)] px-[var(--space-2)] py-0.5 font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] leading-none",
             isActive
               ? "bg-[var(--accent-primary-subtle)] text-[var(--accent-primary)]"
               : "bg-[var(--surface-interactive)] text-[var(--text-secondary)]"
@@ -432,10 +432,10 @@ export function TactileTabsEmpty({
         <Inbox className="h-4 w-4" aria-hidden="true" />
       </div>
       <div className="space-y-[var(--space-1)]">
-        <p className="text-[var(--text-sm)] font-semibold text-[var(--text-primary)]">
+        <p className="text-[length:var(--text-sm)] font-semibold text-[var(--text-primary)]">
           {title}
         </p>
-        <p className="max-w-[52ch] text-[var(--text-sm)] text-[var(--text-secondary)]">
+        <p className="max-w-[52ch] text-[length:var(--text-sm)] text-[var(--text-secondary)]">
           {description}
         </p>
       </div>
@@ -467,9 +467,9 @@ export function TactileTabsError({
     >
       <div className="flex items-center gap-[var(--space-2)] text-[var(--status-danger)]">
         <AlertCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
-        <p className="text-[var(--text-sm)] font-semibold">{title}</p>
+        <p className="text-[length:var(--text-sm)] font-semibold">{title}</p>
       </div>
-      <p className="max-w-[52ch] text-[var(--text-sm)] text-[var(--text-primary)]">
+      <p className="max-w-[52ch] text-[length:var(--text-sm)] text-[var(--text-primary)]">
         {description}
       </p>
       {onRetry ? (
@@ -478,7 +478,7 @@ export function TactileTabsError({
           whileTap={{ scale: 0.97 }}
           transition={TACTILE_SPRING}
           onClick={onRetry}
-          className="inline-flex items-center gap-[var(--space-2)] rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--surface-elevated)] px-[var(--space-3)] py-[var(--space-2)] text-[var(--text-xs)] font-semibold text-[var(--text-primary)] hover:bg-[var(--surface-interactive)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]"
+          className="inline-flex items-center gap-[var(--space-2)] rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--surface-elevated)] px-[var(--space-3)] py-[var(--space-2)] text-[length:var(--text-xs)] font-semibold text-[var(--text-primary)] hover:bg-[var(--surface-interactive)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]"
         >
           <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
           <span>{retryLabel}</span>

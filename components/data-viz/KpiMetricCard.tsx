@@ -38,18 +38,18 @@ export function KpiMetricCard({
   return (
     <div
       className={cx(
-        "flex flex-col justify-between gap-[var(--space-3)] rounded-[var(--radius-xl)] border border-[var(--border-subtle)] bg-[var(--surface-elevated)] p-[var(--space-5)] font-[var(--font-sans)] shadow-[var(--shadow-hairline)]",
+        "flex flex-col justify-between gap-[var(--space-3)] rounded-[var(--radius-xl)] border border-[var(--border-subtle)] bg-[var(--surface-elevated)] p-[var(--space-5)] font-[family-name:var(--font-sans)] shadow-[var(--shadow-hairline)]",
         className
       )}
     >
       <div className="flex items-center justify-between gap-[var(--space-3)]">
-        <span className="text-[var(--text-xs)] font-semibold uppercase tracking-[var(--tracking-wide)] text-[var(--text-muted)]">
+        <span className="text-[length:var(--text-xs)] font-semibold uppercase tracking-[var(--tracking-wide)] text-[var(--text-muted)]">
           {label}
         </span>
         {delta ? (
           <span
             className={cx(
-              "inline-flex items-center gap-1 rounded-[var(--radius-xs)] px-[var(--space-2)] py-0.5 tabular-nums font-[var(--font-mono)] text-[11px] font-semibold",
+              "inline-flex items-center gap-1 rounded-[var(--radius-xs)] px-[var(--space-2)] py-0.5 tabular-nums font-[family-name:var(--font-mono)] text-[11px] font-semibold",
               trendColor
             )}
           >
@@ -67,13 +67,13 @@ export function KpiMetricCard({
 
       <div className="flex items-baseline justify-between gap-[var(--space-4)]">
         {period ? (
-          <span className="text-[var(--text-xs)] text-[var(--text-secondary)]">
+          <span className="text-[length:var(--text-xs)] text-[var(--text-secondary)]">
             {period}
           </span>
         ) : (
           <span />
         )}
-        <span className="tabular-nums text-right font-[var(--font-mono)] text-[var(--text-2xl)] font-semibold leading-none tracking-[var(--tracking-tight)] text-[var(--text-primary)]">
+        <span className="tabular-nums text-right font-[family-name:var(--font-mono)] text-[length:var(--text-2xl)] font-semibold leading-none tracking-[var(--tracking-tight)] text-[var(--text-primary)]">
           {value}
         </span>
       </div>
@@ -123,7 +123,7 @@ export function KpiMetricCardError({
       )}
     >
       <div className="flex items-center justify-between gap-[var(--space-2)]">
-        <span className="text-[var(--text-xs)] font-semibold uppercase tracking-[var(--tracking-wide)] text-[var(--text-primary)]">
+        <span className="text-[length:var(--text-xs)] font-semibold uppercase tracking-[var(--tracking-wide)] text-[var(--text-primary)]">
           {label}
         </span>
         <AlertCircle
@@ -132,7 +132,7 @@ export function KpiMetricCardError({
         />
       </div>
       <div className="flex items-center justify-between gap-[var(--space-3)]">
-        <span className="text-[var(--text-xs)] text-[var(--text-primary)]">
+        <span className="text-[length:var(--text-xs)] text-[var(--text-primary)]">
           {message}
         </span>
         {onRetry ? (
@@ -141,7 +141,7 @@ export function KpiMetricCardError({
             whileTap={{ scale: 0.97 }}
             transition={TACTILE_SPRING}
             onClick={onRetry}
-            className="inline-flex items-center gap-1 rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--surface-elevated)] px-[var(--space-2)] py-1 text-[var(--text-xs)] font-medium text-[var(--text-primary)] hover:bg-[var(--surface-interactive)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]"
+            className="inline-flex items-center gap-1 rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--surface-elevated)] px-[var(--space-2)] py-1 text-[length:var(--text-xs)] font-medium text-[var(--text-primary)] hover:bg-[var(--surface-interactive)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]"
           >
             <RotateCcw className="h-3 w-3" aria-hidden="true" />
             Retry

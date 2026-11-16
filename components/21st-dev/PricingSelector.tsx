@@ -47,7 +47,7 @@ export function PricingSelector({
     <MotionConfig reducedMotion="user">
       <div
         className={cx(
-          "flex w-full flex-col gap-[var(--space-4)] rounded-[var(--radius-xl)] border border-[var(--border-default)] bg-[var(--surface-elevated)] p-[var(--space-4)] font-[var(--font-sans)] shadow-[var(--shadow-card)]",
+          "flex w-full flex-col gap-[var(--space-4)] rounded-[var(--radius-xl)] border border-[var(--border-default)] bg-[var(--surface-elevated)] p-[var(--space-4)] font-[family-name:var(--font-sans)] shadow-[var(--shadow-card)]",
           className
         )}
       >
@@ -68,7 +68,7 @@ export function PricingSelector({
                 transition={TACTILE_SPRING}
                 onClick={() => setBilling(period)}
                 className={cx(
-                  "relative z-0 rounded-[var(--radius-pill)] py-[var(--space-2)] text-[var(--text-xs)] font-semibold capitalize select-none",
+                  "relative z-0 rounded-[var(--radius-pill)] py-[var(--space-2)] text-[length:var(--text-xs)] font-semibold capitalize select-none",
                   active
                     ? "text-[var(--text-primary)]"
                     : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]",
@@ -128,26 +128,26 @@ export function PricingSelector({
 
                 <div className="space-y-0.5">
                   <div className="flex items-center gap-[var(--space-2)]">
-                    <span className="text-[var(--text-base)] font-semibold text-[var(--text-primary)]">
+                    <span className="text-[length:var(--text-base)] font-semibold text-[var(--text-primary)]">
                       {tier.name}
                     </span>
                     {tier.badge ? (
-                      <span className="rounded-[var(--radius-xs)] bg-[var(--accent-primary-subtle)] px-[var(--space-2)] py-0.5 font-[var(--font-mono)] text-[11px] font-semibold text-[var(--accent-primary)]">
+                      <span className="rounded-[var(--radius-xs)] bg-[var(--accent-primary-subtle)] px-[var(--space-2)] py-0.5 font-[family-name:var(--font-mono)] text-[11px] font-semibold text-[var(--accent-primary)]">
                         {tier.badge}
                       </span>
                     ) : null}
                   </div>
-                  <p className="text-[var(--text-xs)] text-[var(--text-secondary)]">
+                  <p className="text-[length:var(--text-xs)] text-[var(--text-secondary)]">
                     {tier.summary}
                   </p>
                 </div>
 
                 <div className="flex items-center gap-[var(--space-3)] shrink-0">
                   <div className="text-right">
-                    <span className="tabular-nums font-[var(--font-mono)] text-[var(--text-lg)] font-semibold text-[var(--text-primary)]">
+                    <span className="tabular-nums font-[family-name:var(--font-mono)] text-[length:var(--text-lg)] font-semibold text-[var(--text-primary)]">
                       ${price}
                     </span>
-                    <span className="text-[var(--text-xs)] text-[var(--text-muted)]">
+                    <span className="text-[length:var(--text-xs)] text-[var(--text-muted)]">
                       /mo
                     </span>
                   </div>
@@ -177,7 +177,7 @@ export function PricingSelector({
               onSelectTier?.(selectedTier, billing);
             }
           }}
-          className="h-10 w-full rounded-[var(--radius-md)] bg-[var(--accent-primary)] px-[var(--space-4)] text-[var(--text-sm)] font-semibold text-[var(--accent-primary-foreground)] transition-colors hover:bg-[var(--accent-primary-hover)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]"
+          className="h-10 w-full rounded-[var(--radius-md)] bg-[var(--accent-primary)] px-[var(--space-4)] text-[length:var(--text-sm)] font-semibold text-[var(--accent-primary-foreground)] transition-colors hover:bg-[var(--accent-primary-hover)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]"
         >
           {ctaLabel}
         </motion.button>

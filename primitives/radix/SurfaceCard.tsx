@@ -12,7 +12,7 @@ export const SurfaceCard = React.forwardRef<
     <div
       ref={ref}
       className={cx(
-        "rounded-[var(--radius-xl)] border border-[var(--border-subtle)] bg-[var(--surface-elevated)] font-[var(--font-sans)] text-[var(--text-primary)] shadow-[var(--shadow-hairline)]",
+        "rounded-[var(--radius-xl)] border border-[var(--border-subtle)] bg-[var(--surface-elevated)] font-[family-name:var(--font-sans)] text-[var(--text-primary)] shadow-[var(--shadow-hairline)]",
         className
       )}
       {...props}
@@ -44,7 +44,7 @@ export const SurfaceCardTitle = React.forwardRef<
     <h3
       ref={ref}
       className={cx(
-        "font-[var(--font-display)] text-[var(--text-xl)] font-semibold leading-[var(--leading-snug)] tracking-[var(--tracking-tight)] text-[var(--text-primary)]",
+        "font-[family-name:var(--font-display)] text-[length:var(--text-xl)] font-semibold leading-[var(--leading-snug)] tracking-[var(--tracking-tight)] text-[var(--text-primary)]",
         className
       )}
       {...props}
@@ -60,7 +60,7 @@ export const SurfaceCardDescription = React.forwardRef<
     <p
       ref={ref}
       className={cx(
-        "text-[var(--text-sm)] leading-[var(--leading-normal)] text-[var(--text-secondary)]",
+        "text-[length:var(--text-sm)] leading-[var(--leading-normal)] text-[var(--text-secondary)]",
         className
       )}
       {...props}

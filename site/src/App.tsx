@@ -6,6 +6,7 @@ import {
   Check,
   Code2,
   Compass,
+  Copy,
   FolderTree,
   Gauge,
   Github,
@@ -86,9 +87,10 @@ type TypographyMode = "technical" | "editorial" | "geometric";
 
 function StickyStageVisual({ progress }: { progress: MotionValue<number> }) {
   const tokenScale = useTransform(progress, [0, 0.35, 1], [0.96, 1, 1]);
-  const barWidthA = useTransform(progress, [0, 0.5, 1], [0.65, 0.92, 0.88]);
-  const barWidthB = useTransform(progress, [0, 0.5, 1], [0.42, 0.78, 0.95]);
-  const barWidthC = useTransform(progress, [0, 0.5, 1], [0.82, 0.58, 0.9]);
+  const barWidthA = useTransform(progress, [0, 0.5, 1], [0.62, 0.94, 0.88]);
+  const barWidthB = useTransform(progress, [0, 0.5, 1], [0.42, 0.78, 0.96]);
+  const barWidthC = useTransform(progress, [0, 0.5, 1], [0.8, 0.62, 0.94]);
+  const markerX = useTransform(progress, [0, 1], [0, 228]);
 
   return (
     <motion.div
@@ -97,68 +99,120 @@ function StickyStageVisual({ progress }: { progress: MotionValue<number> }) {
     >
       <div className="flex items-center justify-between border-b border-[var(--border-subtle)] pb-[var(--space-4)]">
         <div className="space-y-1">
-          <span className="font-[var(--font-mono)] text-[var(--text-xs)] uppercase tracking-[var(--tracking-caps)] text-[var(--accent-primary)]">
+          <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] uppercase tracking-[var(--tracking-caps)] text-[var(--accent-primary)]">
             Runtime Telemetry
           </span>
-          <p className="font-[var(--font-display)] text-[var(--text-xl)] font-semibold text-[var(--text-primary)]">
+          <p className="font-[family-name:var(--font-display)] text-[length:var(--text-xl)] font-semibold text-[var(--text-primary)]">
             Live Token &amp; GPU Surface Stage
           </p>
         </div>
-        <span className="rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--surface-elevated)] px-[var(--space-3)] py-[var(--space-1)] font-[var(--font-mono)] text-[var(--text-xs)] text-[var(--text-secondary)]">
+        <span className="tabular-nums rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--surface-elevated)] px-[var(--space-3)] py-[var(--space-1)] font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-[var(--text-secondary)]">
           60 fps
         </span>
       </div>
 
-      <div className="my-auto grid grid-cols-1 gap-[var(--space-4)] py-[var(--space-6)] sm:grid-cols-2">
+      {/* Scroll-linked spring response curve */}
+      <div className="my-auto space-y-[var(--space-4)] py-[var(--space-4)]">
         <div className="rounded-[var(--radius-lg)] border border-[var(--border-subtle)] bg-[var(--surface-elevated)] p-[var(--space-4)]">
-          <p className="font-[var(--font-mono)] text-[var(--text-xs)] text-[var(--text-muted)]">
-            Tactile Control Spring
-          </p>
-          <p className="mt-1 tabular-nums font-[var(--font-mono)] text-[var(--text-lg)] font-semibold text-[var(--text-primary)]">
-            380 / 32 / 0.8
-          </p>
-          <div className="mt-[var(--space-3)] h-2 w-full overflow-hidden rounded-[var(--radius-pill)] bg-[var(--surface-sunken)]">
-            <motion.div
-              style={{ scaleX: barWidthA }}
-              className="h-full origin-left bg-[var(--accent-primary)]"
-            />
-          </div>
-        </div>
-
-        <div className="rounded-[var(--radius-lg)] border border-[var(--border-subtle)] bg-[var(--surface-elevated)] p-[var(--space-4)]">
-          <p className="font-[var(--font-mono)] text-[var(--text-xs)] text-[var(--text-muted)]">
-            Fluid Expansion Spring
-          </p>
-          <p className="mt-1 tabular-nums font-[var(--font-mono)] text-[var(--text-lg)] font-semibold text-[var(--text-primary)]">
-            240 / 28 / 1.0
-          </p>
-          <div className="mt-[var(--space-3)] h-2 w-full overflow-hidden rounded-[var(--radius-pill)] bg-[var(--surface-sunken)]">
-            <motion.div
-              style={{ scaleX: barWidthB }}
-              className="h-full origin-left bg-[var(--text-primary)]"
-            />
-          </div>
-        </div>
-
-        <div className="rounded-[var(--radius-lg)] border border-[var(--border-subtle)] bg-[var(--surface-elevated)] p-[var(--space-4)] sm:col-span-2">
-          <div className="flex items-center justify-between">
-            <span className="font-[var(--font-mono)] text-[var(--text-xs)] text-[var(--text-muted)]">
-              WCAG Primary Contrast &amp; GPU Budget
+          <div className="mb-[var(--space-3)] flex items-center justify-between">
+            <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-[var(--text-muted)]">
+              Damped Spring Trajectory (Scroll-Linked)
             </span>
-            <span className="tabular-nums font-[var(--font-mono)] text-[var(--text-xs)] font-semibold text-[var(--status-success)]">
-              PASS · transform + opacity + clip-path
+            <span className="font-[family-name:var(--font-mono)] text-[11px] text-[var(--accent-primary)]">
+              y(t) · GPU Transform
             </span>
           </div>
-          <div className="mt-[var(--space-3)] h-2 w-full overflow-hidden rounded-[var(--radius-pill)] bg-[var(--surface-sunken)]">
-            <motion.div
-              style={{ scaleX: barWidthC }}
-              className="h-full origin-left bg-[var(--status-success)]"
+
+          <svg
+            viewBox="0 0 280 76"
+            className="h-20 w-full overflow-visible"
+            aria-hidden="true"
+          >
+            <line
+              x1="0"
+              y1="18"
+              x2="280"
+              y2="18"
+              stroke="var(--border-subtle)"
+              strokeDasharray="3 3"
             />
+            <line
+              x1="0"
+              y1="58"
+              x2="280"
+              y2="58"
+              stroke="var(--border-subtle)"
+            />
+            <path
+              d="M 8 58 C 34 58, 42 12, 74 16 C 98 19, 108 22, 134 18 C 164 15, 198 18, 272 18"
+              fill="none"
+              stroke="var(--accent-primary)"
+              strokeWidth="2"
+              strokeLinecap="round"
+            />
+            <motion.circle
+              cx="22"
+              cy="18"
+              r="4.5"
+              fill="var(--surface-elevated)"
+              stroke="var(--accent-primary)"
+              strokeWidth="2"
+              style={{ x: markerX }}
+            />
+          </svg>
+        </div>
+
+        <div className="grid grid-cols-1 gap-[var(--space-4)] sm:grid-cols-2">
+          <div className="rounded-[var(--radius-lg)] border border-[var(--border-subtle)] bg-[var(--surface-elevated)] p-[var(--space-4)]">
+            <p className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-[var(--text-muted)]">
+              Tactile Control Spring
+            </p>
+            <p className="mt-1 tabular-nums font-[family-name:var(--font-mono)] text-[length:var(--text-lg)] font-semibold text-[var(--text-primary)]">
+              380 / 32 / 0.8
+            </p>
+            <div className="mt-[var(--space-3)] h-1.5 w-full overflow-hidden rounded-[var(--radius-pill)] bg-[var(--surface-sunken)]">
+              <motion.div
+                style={{ scaleX: barWidthA }}
+                className="h-full origin-left bg-[var(--accent-primary)]"
+              />
+            </div>
+          </div>
+
+          <div className="rounded-[var(--radius-lg)] border border-[var(--border-subtle)] bg-[var(--surface-elevated)] p-[var(--space-4)]">
+            <p className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-[var(--text-muted)]">
+              Fluid Expansion Spring
+            </p>
+            <p className="mt-1 tabular-nums font-[family-name:var(--font-mono)] text-[length:var(--text-lg)] font-semibold text-[var(--text-primary)]">
+              240 / 28 / 1.0
+            </p>
+            <div className="mt-[var(--space-3)] h-1.5 w-full overflow-hidden rounded-[var(--radius-pill)] bg-[var(--surface-sunken)]">
+              <motion.div
+                style={{ scaleX: barWidthB }}
+                className="h-full origin-left bg-[var(--text-primary)]"
+              />
+            </div>
+          </div>
+
+          <div className="rounded-[var(--radius-lg)] border border-[var(--border-subtle)] bg-[var(--surface-elevated)] p-[var(--space-4)] sm:col-span-2">
+            <div className="flex items-center justify-between gap-2">
+              <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-[var(--text-muted)]">
+                WCAG Primary Contrast &amp; GPU Budget
+              </span>
+              <span className="tabular-nums font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] font-semibold text-[var(--status-success)]">
+                PASS · transform + opacity + clip-path
+              </span>
+            </div>
+            <div className="mt-[var(--space-3)] h-1.5 w-full overflow-hidden rounded-[var(--radius-pill)] bg-[var(--surface-sunken)]">
+              <motion.div
+                style={{ scaleX: barWidthC }}
+                className="h-full origin-left bg-[var(--status-success)]"
+              />
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="flex items-center justify-between border-t border-[var(--border-subtle)] pt-[var(--space-4)] font-[var(--font-mono)] text-[var(--text-xs)] text-[var(--text-muted)]">
+      <div className="flex items-center justify-between border-t border-[var(--border-subtle)] pt-[var(--space-4)] font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-[var(--text-muted)]">
         <span>tokens/spacing-motion.css</span>
         <span className="tabular-nums">cubic-bezier(0.22, 1, 0.36, 1)</span>
       </div>
@@ -169,9 +223,10 @@ function StickyStageVisual({ progress }: { progress: MotionValue<number> }) {
 export function App() {
   const [theme, setTheme] = React.useState<ThemeMode>("light");
   const [typography, setTypography] =
-    React.useState<TypographyMode>("technical");
+    React.useState<TypographyMode>("editorial");
 
   const [selectedFileId, setSelectedFileId] = React.useState("comp-tabs");
+  const [copiedSync, setCopiedSync] = React.useState(false);
   const [tabsVariant, setTabsVariant] = React.useState<"tabs" | "dock">("tabs");
   const [panelState, setPanelState] = React.useState<
     "default" | "loading" | "empty" | "error"
@@ -204,18 +259,34 @@ export function App() {
   const activeFileInfo =
     FILE_DESCRIPTIONS[selectedFileId] ?? FILE_DESCRIPTIONS["comp-tabs"];
 
+  const syncSnippet = `# Sync Claude Code with AGENTS.md
+ln -s AGENTS.md CLAUDE.md
+
+# Antigravity pre-flight skill path
+.agent/skills/ui-libary/SKILL.md -> AGENTS.md + registry.json + guidelines/`;
+
+  const handleCopySync = async () => {
+    try {
+      await navigator.clipboard.writeText(syncSnippet);
+      setCopiedSync(true);
+      setTimeout(() => setCopiedSync(false), 1800);
+    } catch {
+      setCopiedSync(false);
+    }
+  };
+
   return (
     <MotionConfig reducedMotion="user">
-      <div className="min-h-screen bg-[var(--surface-canvas)] text-[var(--text-primary)] font-[var(--font-sans)]">
+      <div className="min-h-screen bg-[var(--surface-canvas)] font-[family-name:var(--font-sans)] text-[var(--text-primary)]">
         <ScrollProgress />
 
         {/* Sticky Top Utility Bar */}
-        <header className="sticky top-0 z-40 border-b border-[var(--border-subtle)] bg-[var(--surface-canvas)]">
+        <header className="sticky top-0 z-40 border-b border-[var(--border-subtle)] bg-[var(--surface-canvas)]/90 backdrop-blur-md">
           <div className="mx-auto flex max-w-[var(--container-ui)] flex-wrap items-center justify-between gap-[var(--space-4)] px-[var(--space-4)] py-[var(--space-3)] sm:px-[var(--space-6)] lg:px-[var(--space-8)]">
             <div className="flex items-center gap-[var(--space-6)]">
               <a
                 href="#"
-                className="flex items-center gap-[var(--space-2)] rounded-[var(--radius-sm)] font-semibold tracking-[var(--tracking-tight)] text-[var(--text-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]"
+                className="flex items-center gap-[var(--space-2)] rounded-[var(--radius-sm)] font-[family-name:var(--font-display)] text-[length:var(--text-base)] font-semibold tracking-[var(--tracking-tight)] text-[var(--text-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]"
               >
                 <img
                   src={`${import.meta.env.BASE_URL}icon.svg`}
@@ -227,35 +298,35 @@ export function App() {
 
               <nav
                 aria-label="Primary documentation sections"
-                className="hidden items-center gap-[var(--space-5)] text-[var(--text-sm)] text-[var(--text-secondary)] md:flex"
+                className="hidden items-center gap-[var(--space-5)] text-[length:var(--text-sm)] font-medium text-[var(--text-secondary)] md:flex"
               >
                 <a
                   href="#architecture"
-                  className="hover:text-[var(--text-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)] rounded-[var(--radius-xs)]"
+                  className="rounded-[var(--radius-xs)] transition-colors hover:text-[var(--text-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]"
                 >
                   Architecture
                 </a>
                 <a
                   href="#motion"
-                  className="hover:text-[var(--text-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)] rounded-[var(--radius-xs)]"
+                  className="rounded-[var(--radius-xs)] transition-colors hover:text-[var(--text-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]"
                 >
                   Motion
                 </a>
                 <a
                   href="#components"
-                  className="hover:text-[var(--text-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)] rounded-[var(--radius-xs)]"
+                  className="rounded-[var(--radius-xs)] transition-colors hover:text-[var(--text-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]"
                 >
                   Components
                 </a>
                 <a
                   href="#patterns"
-                  className="hover:text-[var(--text-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)] rounded-[var(--radius-xs)]"
+                  className="rounded-[var(--radius-xs)] transition-colors hover:text-[var(--text-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]"
                 >
                   Patterns
                 </a>
                 <a
                   href="#tokens"
-                  className="hover:text-[var(--text-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)] rounded-[var(--radius-xs)]"
+                  className="rounded-[var(--radius-xs)] transition-colors hover:text-[var(--text-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]"
                 >
                   Tokens
                 </a>
@@ -269,8 +340,8 @@ export function App() {
                   value={typography}
                   onValueChange={setTypography}
                   options={[
-                    { value: "technical", label: "Technical" },
                     { value: "editorial", label: "Editorial" },
+                    { value: "technical", label: "Technical" },
                     { value: "geometric", label: "Geometric" },
                   ]}
                 />
@@ -284,7 +355,7 @@ export function App() {
                 onClick={() =>
                   setTheme((prev) => (prev === "light" ? "dark" : "light"))
                 }
-                className="inline-flex h-8 items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--border-default)] bg-[var(--surface-elevated)] px-[var(--space-3)] text-[var(--text-xs)] font-medium text-[var(--text-primary)] hover:bg-[var(--surface-interactive)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]"
+                className="inline-flex h-8 items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--border-default)] bg-[var(--surface-elevated)] px-[var(--space-3)] text-[length:var(--text-xs)] font-medium text-[var(--text-primary)] transition-colors hover:bg-[var(--surface-interactive)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]"
               >
                 {theme === "light" ? (
                   <Moon className="h-3.5 w-3.5" aria-hidden="true" />
@@ -300,7 +371,7 @@ export function App() {
                 rel="noreferrer"
                 whileTap={{ scale: 0.97 }}
                 transition={TACTILE_SPRING}
-                className="inline-flex h-8 items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--border-default)] bg-[var(--surface-elevated)] px-[var(--space-3)] text-[var(--text-xs)] font-medium text-[var(--text-primary)] hover:bg-[var(--surface-interactive)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]"
+                className="inline-flex h-8 items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--border-default)] bg-[var(--surface-elevated)] px-[var(--space-3)] text-[length:var(--text-xs)] font-medium text-[var(--text-primary)] transition-colors hover:bg-[var(--surface-interactive)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]"
               >
                 <Github className="h-3.5 w-3.5" aria-hidden="true" />
                 <span className="hidden sm:inline">GitHub</span>
@@ -322,12 +393,12 @@ export function App() {
             { label: "Primary Contrast", value: "17.5 : 1" },
           ]}
           artifact={
-            <div className="space-y-[var(--space-4)] rounded-[var(--radius-xl)] border border-[var(--border-default)] bg-[var(--surface-sunken)] p-[var(--space-4)]">
+            <div className="space-y-[var(--space-4)] rounded-[var(--radius-xl)] border border-[var(--border-default)] bg-[var(--surface-sunken)] p-[var(--space-4)] shadow-[var(--shadow-card)]">
               <div className="flex items-center justify-between gap-[var(--space-3)] px-[var(--space-1)]">
-                <span className="font-[var(--font-mono)] text-[var(--text-xs)] font-semibold uppercase tracking-[var(--tracking-caps)] text-[var(--text-muted)]">
+                <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] font-semibold uppercase tracking-[var(--tracking-caps)] text-[var(--text-muted)]">
                   Interactive Repository Map
                 </span>
-                <span className="font-[var(--font-mono)] text-[var(--text-xs)] text-[var(--accent-primary)]">
+                <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-[var(--accent-primary)]">
                   Click any file
                 </span>
               </div>
@@ -342,21 +413,22 @@ export function App() {
                   />
                 </div>
 
-                <div className="flex flex-col justify-between rounded-[var(--radius-xl)] border border-[var(--border-subtle)] bg-[var(--surface-elevated)] p-[var(--space-4)] sm:col-span-5">
+                <div className="flex flex-col justify-between rounded-[var(--radius-xl)] border border-[var(--border-subtle)] bg-[var(--surface-elevated)] p-[var(--space-5)] sm:col-span-5">
                   <div className="space-y-[var(--space-2)]">
-                    <span className="font-[var(--font-mono)] text-[11px] font-semibold uppercase tracking-[var(--tracking-caps)] text-[var(--accent-primary)]">
+                    <span className="font-[family-name:var(--font-mono)] text-[11px] font-semibold uppercase tracking-[var(--tracking-caps)] text-[var(--accent-primary)]">
                       File Specification
                     </span>
-                    <h2 className="font-[var(--font-display)] text-[var(--text-base)] font-semibold text-[var(--text-primary)]">
+                    <h2 className="font-[family-name:var(--font-display)] text-[length:var(--text-lg)] font-semibold leading-[var(--leading-snug)] text-[var(--text-primary)]">
                       {activeFileInfo?.title}
                     </h2>
-                    <p className="text-[var(--text-xs)] leading-[var(--leading-relaxed)] text-[var(--text-secondary)]">
+                    <p className="text-[length:var(--text-xs)] leading-[var(--leading-relaxed)] text-[var(--text-secondary)]">
                       {activeFileInfo?.summary}
                     </p>
                   </div>
 
-                  <div className="mt-[var(--space-4)] border-t border-[var(--border-subtle)] pt-[var(--space-3)] font-[var(--font-mono)] text-[11px] text-[var(--text-muted)]">
-                    Indexed in registry.json
+                  <div className="mt-[var(--space-5)] flex items-center justify-between border-t border-[var(--border-subtle)] pt-[var(--space-3)] font-[family-name:var(--font-mono)] text-[11px] text-[var(--text-muted)]">
+                    <span>registry.json</span>
+                    <span className="text-[var(--status-success)]">Indexed</span>
                   </div>
                 </div>
               </div>
@@ -370,21 +442,21 @@ export function App() {
           className="border-b border-[var(--border-subtle)] py-[var(--space-16)]"
         >
           <div className="mx-auto max-w-[var(--container-ui)] space-y-[var(--space-10)] px-[var(--space-4)] sm:px-[var(--space-6)] lg:px-[var(--space-8)]">
-            <div className="grid grid-cols-1 gap-[var(--space-8)] lg:grid-cols-12">
+            <div className="grid grid-cols-1 items-start gap-[var(--space-8)] lg:grid-cols-12">
               <div className="space-y-[var(--space-3)] lg:col-span-5">
-                <span className="font-[var(--font-mono)] text-[var(--text-xs)] font-semibold uppercase tracking-[var(--tracking-caps)] text-[var(--accent-primary)]">
+                <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] font-semibold uppercase tracking-[var(--tracking-caps)] text-[var(--accent-primary)]">
                   01 · How It Works
                 </span>
-                <h2 className="font-[var(--font-display)] text-[var(--text-3xl)] font-semibold leading-[var(--leading-tight)] tracking-[var(--tracking-tight)]">
+                <h2 className="font-[family-name:var(--font-display)] text-[length:var(--text-3xl)] font-semibold leading-[var(--leading-tight)] tracking-[var(--tracking-tight)]">
                   One source of truth across Claude, Codex, and Antigravity.
                 </h2>
-                <p className="max-w-[52ch] text-[var(--text-base)] leading-[var(--leading-relaxed)] text-[var(--text-secondary)]">
+                <p className="max-w-[52ch] text-[length:var(--text-base)] leading-[var(--leading-relaxed)] text-[var(--text-secondary)]">
                   Before an agent generates a single line of JSX, it reads{" "}
-                  <code className="font-[var(--font-mono)] text-[var(--text-sm)] text-[var(--text-primary)]">
+                  <code className="font-[family-name:var(--font-mono)] text-[length:var(--text-sm)] text-[var(--text-primary)]">
                     AGENTS.md
                   </code>{" "}
                   and{" "}
-                  <code className="font-[var(--font-mono)] text-[var(--text-sm)] text-[var(--text-primary)]">
+                  <code className="font-[family-name:var(--font-mono)] text-[length:var(--text-sm)] text-[var(--text-primary)]">
                     registry.json
                   </code>
                   , selects tokens and primitives, composes curated blocks, and passes the 6-point audit.
@@ -418,15 +490,35 @@ export function App() {
 
                   <TactileTabsContent value="sync">
                     <div className="space-y-[var(--space-4)]">
-                      <p className="text-[var(--text-sm)] leading-[var(--leading-normal)] text-[var(--text-secondary)]">
-                        Keep rules unified in <code className="font-[var(--font-mono)]">AGENTS.md</code> for Codex, mirror or symlink to <code className="font-[var(--font-mono)]">CLAUDE.md</code> for Claude Code, and enforce pre-flight reading via Antigravity&apos;s <code className="font-[var(--font-mono)]">SKILL.md</code>.
-                      </p>
-                      <pre className="overflow-x-auto rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--surface-sunken)] p-[var(--space-4)] font-[var(--font-mono)] text-[var(--text-xs)] leading-[var(--leading-relaxed)] text-[var(--text-primary)]">
-{`# Sync Claude Code with AGENTS.md
-ln -s AGENTS.md CLAUDE.md
-
-# Antigravity pre-flight skill path
-.agent/skills/ui-libary/SKILL.md -> AGENTS.md + registry.json + guidelines/`}
+                      <div className="flex flex-wrap items-start justify-between gap-[var(--space-3)]">
+                        <p className="max-w-[56ch] text-[length:var(--text-sm)] leading-[var(--leading-normal)] text-[var(--text-secondary)]">
+                          Keep rules unified in{" "}
+                          <code className="font-[family-name:var(--font-mono)]">AGENTS.md</code>{" "}
+                          for Codex, mirror or symlink to{" "}
+                          <code className="font-[family-name:var(--font-mono)]">CLAUDE.md</code>{" "}
+                          for Claude Code, and enforce pre-flight reading via Antigravity&apos;s{" "}
+                          <code className="font-[family-name:var(--font-mono)]">SKILL.md</code>.
+                        </p>
+                        <ActionButton
+                          size="sm"
+                          variant="outline"
+                          onClick={handleCopySync}
+                        >
+                          {copiedSync ? (
+                            <>
+                              <Check className="h-3.5 w-3.5 text-[var(--status-success)]" aria-hidden="true" />
+                              <span>Copied</span>
+                            </>
+                          ) : (
+                            <>
+                              <Copy className="h-3.5 w-3.5" aria-hidden="true" />
+                              <span>Copy</span>
+                            </>
+                          )}
+                        </ActionButton>
+                      </div>
+                      <pre className="overflow-x-auto rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--surface-sunken)] p-[var(--space-4)] font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] leading-[var(--leading-relaxed)] text-[var(--text-primary)]">
+                        {syncSnippet}
                       </pre>
                     </div>
                   </TactileTabsContent>
@@ -455,10 +547,10 @@ ln -s AGENTS.md CLAUDE.md
                           key={item.layer}
                           className="rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--surface-sunken)] p-[var(--space-4)]"
                         >
-                          <p className="font-[var(--font-mono)] text-[var(--text-xs)] font-semibold text-[var(--accent-primary)]">
+                          <p className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] font-semibold text-[var(--accent-primary)]">
                             {item.layer}
                           </p>
-                          <p className="mt-1 text-[var(--text-xs)] leading-[var(--leading-normal)] text-[var(--text-secondary)]">
+                          <p className="mt-1 text-[length:var(--text-xs)] leading-[var(--leading-normal)] text-[var(--text-secondary)]">
                             {item.desc}
                           </p>
                         </div>
@@ -476,7 +568,7 @@ ln -s AGENTS.md CLAUDE.md
                           )
                         }
                       />
-                      <p className="font-[var(--font-mono)] text-[var(--text-xs)] text-[var(--text-secondary)]">
+                      <p className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-[var(--text-secondary)]">
                         {selectedActionMsg}
                       </p>
                     </div>
@@ -495,16 +587,16 @@ ln -s AGENTS.md CLAUDE.md
           <div className="mx-auto max-w-[var(--container-ui)] space-y-[var(--space-12)] px-[var(--space-4)] sm:px-[var(--space-6)] lg:px-[var(--space-8)]">
             <div className="flex flex-wrap items-end justify-between gap-[var(--space-4)]">
               <div className="space-y-[var(--space-2)]">
-                <span className="font-[var(--font-mono)] text-[var(--text-xs)] font-semibold uppercase tracking-[var(--tracking-caps)] text-[var(--accent-primary)]">
+                <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] font-semibold uppercase tracking-[var(--tracking-caps)] text-[var(--accent-primary)]">
                   02 · Motion Primitives
                 </span>
-                <h2 className="font-[var(--font-display)] text-[var(--text-3xl)] font-semibold leading-[var(--leading-tight)] tracking-[var(--tracking-tight)]">
+                <h2 className="font-[family-name:var(--font-display)] text-[length:var(--text-3xl)] font-semibold leading-[var(--leading-tight)] tracking-[var(--tracking-tight)]">
                   Tactile springs, spatial continuity, and real states.
                 </h2>
               </div>
-              <p className="max-w-[44ch] text-[var(--text-sm)] text-[var(--text-secondary)]">
+              <p className="max-w-[44ch] text-[length:var(--text-sm)] leading-[var(--leading-normal)] text-[var(--text-secondary)]">
                 Every control animates composited GPU properties only and wraps root trees in{" "}
-                <code className="font-[var(--font-mono)]">MotionConfig reducedMotion=&quot;user&quot;</code>.
+                <code className="font-[family-name:var(--font-mono)]">MotionConfig reducedMotion=&quot;user&quot;</code>.
               </p>
             </div>
 
@@ -514,8 +606,8 @@ ln -s AGENTS.md CLAUDE.md
                 <div className="space-y-1">
                   <SurfaceCardTitle>TactileTabs &amp; Dock</SurfaceCardTitle>
                   <SurfaceCardDescription>
-                    Shared <code className="font-[var(--font-mono)]">layoutId</code> pill with spring{" "}
-                    <code className="font-[var(--font-mono)]">380 / 32 / 0.8</code>, WAI-ARIA arrow navigation, and complete state primitives.
+                    Shared <code className="font-[family-name:var(--font-mono)]">layoutId</code> pill with spring{" "}
+                    <code className="font-[family-name:var(--font-mono)]">380 / 32 / 0.8</code>, WAI-ARIA arrow navigation, and complete state primitives.
                   </SurfaceCardDescription>
                 </div>
 
@@ -593,26 +685,26 @@ ln -s AGENTS.md CLAUDE.md
                     ) : (
                       <div className="grid grid-cols-1 gap-[var(--space-4)] sm:grid-cols-3">
                         <div className="space-y-1">
-                          <span className="font-[var(--font-mono)] text-[var(--text-xs)] text-[var(--text-muted)]">
+                          <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-[var(--text-muted)]">
                             Controls &amp; Tabs
                           </span>
-                          <p className="tabular-nums font-[var(--font-mono)] text-[var(--text-base)] font-semibold">
+                          <p className="tabular-nums font-[family-name:var(--font-mono)] text-[length:var(--text-base)] font-semibold">
                             stiffness: 380 · damping: 32
                           </p>
                         </div>
                         <div className="space-y-1">
-                          <span className="font-[var(--font-mono)] text-[var(--text-xs)] text-[var(--text-muted)]">
+                          <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-[var(--text-muted)]">
                             Panels &amp; Cards
                           </span>
-                          <p className="tabular-nums font-[var(--font-mono)] text-[var(--text-base)] font-semibold">
+                          <p className="tabular-nums font-[family-name:var(--font-mono)] text-[length:var(--text-base)] font-semibold">
                             stiffness: 240 · damping: 28
                           </p>
                         </div>
                         <div className="space-y-1">
-                          <span className="font-[var(--font-mono)] text-[var(--text-xs)] text-[var(--text-muted)]">
+                          <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-[var(--text-muted)]">
                             Fixed Opacity Curve
                           </span>
-                          <p className="tabular-nums font-[var(--font-mono)] text-[var(--text-base)] font-semibold">
+                          <p className="tabular-nums font-[family-name:var(--font-mono)] text-[length:var(--text-base)] font-semibold">
                             (0.22, 1, 0.36, 1)
                           </p>
                         </div>
@@ -621,18 +713,39 @@ ln -s AGENTS.md CLAUDE.md
                   </TactileTabsContent>
 
                   <TactileTabsContent value="keyboard">
-                    <p className="max-w-[64ch] text-[var(--text-sm)] leading-[var(--leading-relaxed)] text-[var(--text-secondary)]">
-                      Focus any tab trigger and press <kbd className="rounded-[var(--radius-xs)] border border-[var(--border-default)] px-1.5 py-0.5 font-[var(--font-mono)] text-[var(--text-xs)]">ArrowRight</kbd>,{" "}
-                      <kbd className="rounded-[var(--radius-xs)] border border-[var(--border-default)] px-1.5 py-0.5 font-[var(--font-mono)] text-[var(--text-xs)]">ArrowLeft</kbd>,{" "}
-                      <kbd className="rounded-[var(--radius-xs)] border border-[var(--border-default)] px-1.5 py-0.5 font-[var(--font-mono)] text-[var(--text-xs)]">Home</kbd>, or{" "}
-                      <kbd className="rounded-[var(--radius-xs)] border border-[var(--border-default)] px-1.5 py-0.5 font-[var(--font-mono)] text-[var(--text-xs)]">End</kbd>. Roving{" "}
-                      <code className="font-[var(--font-mono)]">tabIndex</code> updates automatically alongside <code className="font-[var(--font-mono)]">aria-selected</code>.
+                    <p className="max-w-[64ch] text-[length:var(--text-sm)] leading-[var(--leading-relaxed)] text-[var(--text-secondary)]">
+                      Focus any tab trigger and press{" "}
+                      <kbd className="rounded-[var(--radius-xs)] border border-[var(--border-default)] px-1.5 py-0.5 font-[family-name:var(--font-mono)] text-[length:var(--text-xs)]">
+                        ArrowRight
+                      </kbd>
+                      ,{" "}
+                      <kbd className="rounded-[var(--radius-xs)] border border-[var(--border-default)] px-1.5 py-0.5 font-[family-name:var(--font-mono)] text-[length:var(--text-xs)]">
+                        ArrowLeft
+                      </kbd>
+                      ,{" "}
+                      <kbd className="rounded-[var(--radius-xs)] border border-[var(--border-default)] px-1.5 py-0.5 font-[family-name:var(--font-mono)] text-[length:var(--text-xs)]">
+                        Home
+                      </kbd>
+                      , or{" "}
+                      <kbd className="rounded-[var(--radius-xs)] border border-[var(--border-default)] px-1.5 py-0.5 font-[family-name:var(--font-mono)] text-[length:var(--text-xs)]">
+                        End
+                      </kbd>
+                      . Roving{" "}
+                      <code className="font-[family-name:var(--font-mono)]">tabIndex</code>{" "}
+                      updates automatically alongside{" "}
+                      <code className="font-[family-name:var(--font-mono)]">aria-selected</code>.
                     </p>
                   </TactileTabsContent>
 
                   <TactileTabsContent value="gpu">
-                    <p className="max-w-[64ch] text-[var(--text-sm)] leading-[var(--leading-relaxed)] text-[var(--text-secondary)]">
-                      Exiting panels use <code className="font-[var(--font-mono)]">AnimatePresence mode=&quot;popLayout&quot;</code> and animate strictly on <code className="font-[var(--font-mono)]">opacity</code> and <code className="font-[var(--font-mono)]">transform</code>, avoiding layout recalculations.
+                    <p className="max-w-[64ch] text-[length:var(--text-sm)] leading-[var(--leading-relaxed)] text-[var(--text-secondary)]">
+                      Exiting panels use{" "}
+                      <code className="font-[family-name:var(--font-mono)]">
+                        AnimatePresence mode=&quot;popLayout&quot;
+                      </code>{" "}
+                      and animate strictly on{" "}
+                      <code className="font-[family-name:var(--font-mono)]">opacity</code> and{" "}
+                      <code className="font-[family-name:var(--font-mono)]">transform</code>, avoiding layout recalculations.
                     </p>
                   </TactileTabsContent>
                 </TactileTabs>
@@ -643,11 +756,16 @@ ln -s AGENTS.md CLAUDE.md
             <div className="space-y-[var(--space-5)]">
               <div className="flex flex-wrap items-center justify-between gap-[var(--space-4)]">
                 <div className="space-y-1">
-                  <h3 className="font-[var(--font-display)] text-[var(--text-2xl)] font-semibold tracking-[var(--tracking-tight)]">
+                  <h3 className="font-[family-name:var(--font-display)] text-[length:var(--text-2xl)] font-semibold tracking-[var(--tracking-tight)]">
                     AppStoreCard (Expandable Spatial Continuity)
                   </h3>
-                  <p className="text-[var(--text-sm)] text-[var(--text-secondary)]">
-                    Click either card to expand with shared <code className="font-[var(--font-mono)]">layoutId</code>, press <kbd className="rounded-[var(--radius-xs)] border border-[var(--border-default)] px-1.5 py-0.5 font-[var(--font-mono)] text-[var(--text-xs)]">Esc</kbd> or drag down to dismiss.
+                  <p className="text-[length:var(--text-sm)] text-[var(--text-secondary)]">
+                    Click either card to expand with shared{" "}
+                    <code className="font-[family-name:var(--font-mono)]">layoutId</code>, press{" "}
+                    <kbd className="rounded-[var(--radius-xs)] border border-[var(--border-default)] px-1.5 py-0.5 font-[family-name:var(--font-mono)] text-[length:var(--text-xs)]">
+                      Esc
+                    </kbd>{" "}
+                    or drag down to dismiss.
                   </p>
                 </div>
 
@@ -670,33 +788,70 @@ ln -s AGENTS.md CLAUDE.md
                   <div className="md:col-span-7">
                     <AppStoreCard>
                       <AppStoreCardTrigger>
-                        <AppStoreCardMedia className="aspect-[16/9] border-b border-[var(--border-subtle)] p-[var(--space-6)] flex flex-col justify-between bg-[var(--surface-sunken)]">
-                          <div className="flex items-center justify-between font-[var(--font-mono)] text-[var(--text-xs)] text-[var(--text-muted)]">
+                        <AppStoreCardMedia className="flex aspect-[16/9] flex-col justify-between border-b border-[var(--border-subtle)] bg-[var(--surface-sunken)] p-[var(--space-6)]">
+                          <div className="flex items-center justify-between font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-[var(--text-muted)]">
                             <span>components/motion/AppStoreCard.tsx</span>
                             <span className="tabular-nums">240 / 28</span>
                           </div>
-                          <div className="grid grid-cols-3 gap-[var(--space-3)] pt-[var(--space-4)]">
+
+                          <svg
+                            viewBox="0 0 360 88"
+                            className="my-2 h-20 w-full"
+                            aria-hidden="true"
+                          >
+                            <line
+                              x1="0"
+                              y1="72"
+                              x2="360"
+                              y2="72"
+                              stroke="var(--border-default)"
+                            />
+                            <line
+                              x1="0"
+                              y1="24"
+                              x2="360"
+                              y2="24"
+                              stroke="var(--border-subtle)"
+                              strokeDasharray="4 4"
+                            />
+                            <path
+                              d="M 10 72 L 160 24 L 350 24"
+                              fill="none"
+                              stroke="var(--border-strong)"
+                              strokeWidth="1.5"
+                              strokeDasharray="4 4"
+                            />
+                            <path
+                              d="M 10 72 C 42 72, 58 14, 98 20 C 128 25, 146 26, 178 24 C 216 22, 260 24, 350 24"
+                              fill="none"
+                              stroke="var(--accent-primary)"
+                              strokeWidth="2.5"
+                              strokeLinecap="round"
+                            />
+                          </svg>
+
+                          <div className="grid grid-cols-3 gap-[var(--space-3)]">
                             <div className="rounded-[var(--radius-md)] border border-[var(--border-default)] bg-[var(--surface-elevated)] p-[var(--space-3)]">
-                              <span className="font-[var(--font-mono)] text-[11px] text-[var(--text-muted)]">
+                              <span className="font-[family-name:var(--font-mono)] text-[11px] text-[var(--text-muted)]">
                                 Shell
                               </span>
-                              <p className="mt-1 font-[var(--font-mono)] text-[var(--text-xs)] font-semibold">
+                              <p className="mt-1 font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] font-semibold">
                                 layoutId
                               </p>
                             </div>
                             <div className="rounded-[var(--radius-md)] border border-[var(--border-default)] bg-[var(--surface-elevated)] p-[var(--space-3)]">
-                              <span className="font-[var(--font-mono)] text-[11px] text-[var(--text-muted)]">
+                              <span className="font-[family-name:var(--font-mono)] text-[11px] text-[var(--text-muted)]">
                                 Exit
                               </span>
-                              <p className="mt-1 font-[var(--font-mono)] text-[var(--text-xs)] font-semibold">
+                              <p className="mt-1 font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] font-semibold">
                                 popLayout
                               </p>
                             </div>
                             <div className="rounded-[var(--radius-md)] border border-[var(--border-default)] bg-[var(--surface-elevated)] p-[var(--space-3)]">
-                              <span className="font-[var(--font-mono)] text-[11px] text-[var(--text-muted)]">
+                              <span className="font-[family-name:var(--font-mono)] text-[11px] text-[var(--text-muted)]">
                                 Gesture
                               </span>
-                              <p className="mt-1 font-[var(--font-mono)] text-[var(--text-xs)] font-semibold">
+                              <p className="mt-1 font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] font-semibold">
                                 drag=&quot;y&quot;
                               </p>
                             </div>
@@ -719,29 +874,41 @@ ln -s AGENTS.md CLAUDE.md
                         subtitle="How AppStoreCard maintains object permanence across container transitions without animating width or height directly."
                         headerMedia={
                           <div className="flex h-44 flex-col justify-end border-b border-[var(--border-subtle)] bg-[var(--surface-sunken)] p-[var(--space-6)]">
-                            <span className="font-[var(--font-mono)] text-[var(--text-xs)] text-[var(--text-muted)]">
+                            <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-[var(--text-muted)]">
                               FLUID_SPRING · stiffness: 240 · damping: 28 · dragElastic: 0.28
                             </span>
                           </div>
                         }
                       >
-                        <p className="text-[var(--text-sm)] leading-[var(--leading-relaxed)] text-[var(--text-secondary)]">
-                          Rather than mounting an unrelated modal over the viewport, <code className="font-[var(--font-mono)] text-[var(--text-primary)]">AppStoreCard</code> pairs a scoped <code className="font-[var(--font-mono)] text-[var(--text-primary)]">LayoutGroup</code> with four synchronized <code className="font-[var(--font-mono)] text-[var(--text-primary)]">layoutId</code> anchors.
+                        <p className="text-[length:var(--text-sm)] leading-[var(--leading-relaxed)] text-[var(--text-secondary)]">
+                          Rather than mounting an unrelated modal over the viewport,{" "}
+                          <code className="font-[family-name:var(--font-mono)] text-[var(--text-primary)]">
+                            AppStoreCard
+                          </code>{" "}
+                          pairs a scoped{" "}
+                          <code className="font-[family-name:var(--font-mono)] text-[var(--text-primary)]">
+                            LayoutGroup
+                          </code>{" "}
+                          with four synchronized{" "}
+                          <code className="font-[family-name:var(--font-mono)] text-[var(--text-primary)]">
+                            layoutId
+                          </code>{" "}
+                          anchors.
                         </p>
                         <div className="grid grid-cols-1 gap-[var(--space-3)] sm:grid-cols-2">
                           <div className="rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--surface-sunken)] p-[var(--space-4)]">
-                            <p className="font-[var(--font-mono)] text-[var(--text-xs)] font-semibold text-[var(--text-primary)]">
+                            <p className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] font-semibold text-[var(--text-primary)]">
                               Focus Restoration
                             </p>
-                            <p className="mt-1 text-[var(--text-xs)] text-[var(--text-secondary)]">
+                            <p className="mt-1 text-[length:var(--text-xs)] text-[var(--text-secondary)]">
                               Opening moves focus to the close button; pressing Escape or dragging down returns focus to the originating card trigger.
                             </p>
                           </div>
                           <div className="rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--surface-sunken)] p-[var(--space-4)]">
-                            <p className="font-[var(--font-mono)] text-[var(--text-xs)] font-semibold text-[var(--text-primary)]">
+                            <p className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] font-semibold text-[var(--text-primary)]">
                               Inertia Drag Dismissal
                             </p>
-                            <p className="mt-1 text-[var(--text-xs)] text-[var(--text-secondary)]">
+                            <p className="mt-1 text-[length:var(--text-xs)] text-[var(--text-secondary)]">
                               Downward drag past 110px or velocity above 420px/s dismisses the sheet smoothly on GPU transforms.
                             </p>
                           </div>
@@ -753,13 +920,29 @@ ln -s AGENTS.md CLAUDE.md
                   <div className="md:col-span-5">
                     <AppStoreCard>
                       <AppStoreCardTrigger className="h-full justify-between">
-                        <AppStoreCardMedia className="aspect-[16/10] border-b border-[var(--border-subtle)] p-[var(--space-5)] flex items-end bg-[var(--surface-sunken)]">
-                          <div className="w-full space-y-2">
-                            <div className="flex justify-between font-[var(--font-mono)] text-[11px] text-[var(--text-muted)]">
-                              <span>--accent-primary</span>
-                              <span className="tabular-nums">6.70 : 1</span>
+                        <AppStoreCardMedia className="flex aspect-[16/10] flex-col justify-between border-b border-[var(--border-subtle)] bg-[var(--surface-sunken)] p-[var(--space-5)]">
+                          <div className="flex items-center justify-between font-[family-name:var(--font-mono)] text-[11px] text-[var(--text-muted)]">
+                            <span>Surface Elevation Stack</span>
+                            <span className="tabular-nums">1px Borders</span>
+                          </div>
+
+                          <div className="space-y-2">
+                            <div className="flex items-center justify-between rounded-[var(--radius-md)] border border-[var(--border-default)] bg-[var(--surface-elevated)] px-[var(--space-3)] py-[var(--space-2)]">
+                              <span className="font-[family-name:var(--font-mono)] text-[11px]">
+                                --surface-elevated
+                              </span>
+                              <span className="tabular-nums font-[family-name:var(--font-mono)] text-[11px] text-[var(--status-success)]">
+                                17.5:1
+                              </span>
                             </div>
-                            <div className="h-2 w-full rounded-[var(--radius-pill)] bg-[var(--accent-primary)]" />
+                            <div className="flex items-center justify-between rounded-[var(--radius-md)] border border-[var(--accent-primary-border)] bg-[var(--accent-primary-subtle)] px-[var(--space-3)] py-[var(--space-2)]">
+                              <span className="font-[family-name:var(--font-mono)] text-[11px] text-[var(--accent-primary)]">
+                                --accent-primary
+                              </span>
+                              <span className="tabular-nums font-[family-name:var(--font-mono)] text-[11px] text-[var(--accent-primary)]">
+                                6.7:1
+                              </span>
+                            </div>
                           </div>
                         </AppStoreCardMedia>
                         <AppStoreCardBody>
@@ -778,8 +961,12 @@ ln -s AGENTS.md CLAUDE.md
                         title="One Accent, Crisp Hairlines"
                         subtitle="Inspect the exact surface hierarchy defined in tokens/colors.css."
                       >
-                        <p className="text-[var(--text-sm)] leading-[var(--leading-relaxed)] text-[var(--text-secondary)]">
-                          Every view uses one neutral base, three tonal elevations (<code className="font-[var(--font-mono)]">--surface-canvas</code>, <code className="font-[var(--font-mono)]">--surface-sunken</code>, <code className="font-[var(--font-mono)]">--surface-elevated</code>), and one primary accent reserved for active intent.
+                        <p className="text-[length:var(--text-sm)] leading-[var(--leading-relaxed)] text-[var(--text-secondary)]">
+                          Every view uses one neutral base, three tonal elevations (
+                          <code className="font-[family-name:var(--font-mono)]">--surface-canvas</code>,{" "}
+                          <code className="font-[family-name:var(--font-mono)]">--surface-sunken</code>,{" "}
+                          <code className="font-[family-name:var(--font-mono)]">--surface-elevated</code>
+                          ), and one primary accent reserved for active intent.
                         </p>
                       </AppStoreCardDetail>
                     </AppStoreCard>
@@ -805,14 +992,15 @@ ln -s AGENTS.md CLAUDE.md
         >
           <div className="mx-auto max-w-[var(--container-ui)] space-y-[var(--space-12)] px-[var(--space-4)] sm:px-[var(--space-6)] lg:px-[var(--space-8)]">
             <div className="space-y-[var(--space-2)]">
-              <span className="font-[var(--font-mono)] text-[var(--text-xs)] font-semibold uppercase tracking-[var(--tracking-caps)] text-[var(--accent-primary)]">
+              <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] font-semibold uppercase tracking-[var(--tracking-caps)] text-[var(--accent-primary)]">
                 03 · Curated 21st.dev &amp; Data-Viz
               </span>
-              <h2 className="font-[var(--font-display)] text-[var(--text-3xl)] font-semibold leading-[var(--leading-tight)] tracking-[var(--tracking-tight)]">
+              <h2 className="font-[family-name:var(--font-display)] text-[length:var(--text-3xl)] font-semibold leading-[var(--leading-tight)] tracking-[var(--tracking-tight)]">
                 Filtered components stripped of neon slop.
               </h2>
-              <p className="max-w-[60ch] text-[var(--text-base)] text-[var(--text-secondary)]">
-                Raw community snippets are audited, refactored to TypeScript, wired to <code className="font-[var(--font-mono)]">tokens/</code>, and upgraded with keyboard support and real loading/error states.
+              <p className="max-w-[60ch] text-[length:var(--text-base)] leading-[var(--leading-relaxed)] text-[var(--text-secondary)]">
+                Raw community snippets are audited, refactored to TypeScript, wired to{" "}
+                <code className="font-[family-name:var(--font-mono)]">tokens/</code>, and upgraded with keyboard support and real loading/error states.
               </p>
             </div>
 
@@ -828,7 +1016,7 @@ ln -s AGENTS.md CLAUDE.md
                   }
                 />
                 {selectedPlanMsg ? (
-                  <p className="rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--surface-sunken)] px-[var(--space-3)] py-[var(--space-2)] font-[var(--font-mono)] text-[var(--text-xs)] text-[var(--text-primary)]">
+                  <p className="rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--surface-sunken)] px-[var(--space-3)] py-[var(--space-2)] font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-[var(--text-primary)]">
                     {selectedPlanMsg}
                   </p>
                 ) : null}
@@ -837,11 +1025,13 @@ ln -s AGENTS.md CLAUDE.md
               <div className="space-y-[var(--space-6)] lg:col-span-7">
                 <div className="flex flex-wrap items-center justify-between gap-[var(--space-3)]">
                   <div>
-                    <h3 className="font-[var(--font-display)] text-[var(--text-xl)] font-semibold">
+                    <h3 className="font-[family-name:var(--font-display)] text-[length:var(--text-xl)] font-semibold">
                       KpiMetricCard &amp; Feedback Primitives
                     </h3>
-                    <p className="text-[var(--text-xs)] text-[var(--text-secondary)]">
-                      Right-aligned <code className="font-[var(--font-mono)]">tabular-nums</code> metrics with explicit skeleton and error states.
+                    <p className="text-[length:var(--text-xs)] text-[var(--text-secondary)]">
+                      Right-aligned{" "}
+                      <code className="font-[family-name:var(--font-mono)]">tabular-nums</code>{" "}
+                      metrics with explicit skeleton and error states.
                     </p>
                   </div>
                   <SegmentedControl
@@ -915,10 +1105,10 @@ ln -s AGENTS.md CLAUDE.md
             <div id="patterns" className="space-y-[var(--space-6)] pt-[var(--space-6)]">
               <div className="flex flex-wrap items-center justify-between gap-[var(--space-4)]">
                 <div className="space-y-1">
-                  <span className="font-[var(--font-mono)] text-[var(--text-xs)] font-semibold uppercase tracking-[var(--tracking-caps)] text-[var(--accent-primary)]">
+                  <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] font-semibold uppercase tracking-[var(--tracking-caps)] text-[var(--accent-primary)]">
                     Layer 3 · Patterns
                   </span>
-                  <h3 className="font-[var(--font-display)] text-[var(--text-2xl)] font-semibold tracking-[var(--tracking-tight)]">
+                  <h3 className="font-[family-name:var(--font-display)] text-[length:var(--text-2xl)] font-semibold tracking-[var(--tracking-tight)]">
                     Complete Application Shells
                   </h3>
                 </div>
@@ -960,7 +1150,7 @@ ln -s AGENTS.md CLAUDE.md
                   ]}
                   headerActions={
                     <>
-                      <span className="font-[var(--font-mono)] text-[var(--text-xs)] text-[var(--text-secondary)]">
+                      <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-[var(--text-secondary)]">
                         patterns/dashboard-shell/DashboardShell.tsx
                       </span>
                       <ActionButton
@@ -974,11 +1164,16 @@ ln -s AGENTS.md CLAUDE.md
                   }
                 >
                   <div className="space-y-[var(--space-4)]">
-                    <h4 className="font-[var(--font-display)] text-[var(--text-lg)] font-semibold">
+                    <h4 className="font-[family-name:var(--font-display)] text-[length:var(--text-lg)] font-semibold">
                       Active View: {dashNav}
                     </h4>
-                    <p className="max-w-[56ch] text-[var(--text-sm)] text-[var(--text-secondary)]">
-                      Sidebar items share a <code className="font-[var(--font-mono)]">layoutId</code> indicator on <code className="font-[var(--font-mono)]">TACTILE_SPRING</code> and align badge counts using <code className="font-[var(--font-mono)]">tabular-nums</code>.
+                    <p className="max-w-[56ch] text-[length:var(--text-sm)] leading-[var(--leading-normal)] text-[var(--text-secondary)]">
+                      Sidebar items share a{" "}
+                      <code className="font-[family-name:var(--font-mono)]">layoutId</code>{" "}
+                      indicator on{" "}
+                      <code className="font-[family-name:var(--font-mono)]">TACTILE_SPRING</code>{" "}
+                      and align badge counts using{" "}
+                      <code className="font-[family-name:var(--font-mono)]">tabular-nums</code>.
                     </p>
                     <div className="grid grid-cols-1 gap-[var(--space-4)] sm:grid-cols-2">
                       <KpiMetricCard
@@ -1017,11 +1212,11 @@ ln -s AGENTS.md CLAUDE.md
               <div className="space-y-[var(--space-5)] lg:col-span-6">
                 <div className="flex items-center gap-[var(--space-2)] text-[var(--accent-primary)]">
                   <Palette className="h-4 w-4" aria-hidden="true" />
-                  <span className="font-[var(--font-mono)] text-[var(--text-xs)] font-semibold uppercase tracking-[var(--tracking-caps)]">
+                  <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] font-semibold uppercase tracking-[var(--tracking-caps)]">
                     04 · Semantic Tokens
                   </span>
                 </div>
-                <h2 className="font-[var(--font-display)] text-[var(--text-2xl)] font-semibold tracking-[var(--tracking-tight)]">
+                <h2 className="font-[family-name:var(--font-display)] text-[length:var(--text-2xl)] font-semibold tracking-[var(--tracking-tight)]">
                   Color Palette ({theme === "light" ? "Light Mode" : "Dark Mode"})
                 </h2>
 
@@ -1038,15 +1233,15 @@ ln -s AGENTS.md CLAUDE.md
                           style={{ backgroundColor: `var(${swatch.token})` }}
                         />
                         <div>
-                          <p className="font-[var(--font-mono)] text-[var(--text-xs)] font-semibold text-[var(--text-primary)]">
+                          <p className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] font-semibold text-[var(--text-primary)]">
                             {swatch.token}
                           </p>
-                          <p className="text-[var(--text-xs)] text-[var(--text-muted)]">
+                          <p className="text-[length:var(--text-xs)] text-[var(--text-muted)]">
                             {swatch.role}
                           </p>
                         </div>
                       </div>
-                      <span className="tabular-nums font-[var(--font-mono)] text-[var(--text-xs)] text-[var(--text-secondary)]">
+                      <span className="tabular-nums font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-[var(--text-secondary)]">
                         {theme === "light" ? swatch.light : swatch.dark}
                       </span>
                     </div>
@@ -1056,10 +1251,10 @@ ln -s AGENTS.md CLAUDE.md
 
               {/* Typography Pairing Live Specimen */}
               <div className="space-y-[var(--space-5)] lg:col-span-6">
-                <div className="flex items-center justify-between gap-[var(--space-3)]">
+                <div className="flex flex-wrap items-center justify-between gap-[var(--space-3)]">
                   <div className="flex items-center gap-[var(--space-2)] text-[var(--accent-primary)]">
                     <Type className="h-4 w-4" aria-hidden="true" />
-                    <span className="font-[var(--font-mono)] text-[var(--text-xs)] font-semibold uppercase tracking-[var(--tracking-caps)]">
+                    <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] font-semibold uppercase tracking-[var(--tracking-caps)]">
                       Typography Pairings
                     </span>
                   </div>
@@ -1068,8 +1263,8 @@ ln -s AGENTS.md CLAUDE.md
                     value={typography}
                     onValueChange={setTypography}
                     options={[
-                      { value: "technical", label: "Technical" },
                       { value: "editorial", label: "Editorial" },
+                      { value: "technical", label: "Technical" },
                       { value: "geometric", label: "Geometric" },
                     ]}
                   />
@@ -1077,17 +1272,24 @@ ln -s AGENTS.md CLAUDE.md
 
                 <SurfaceCard>
                   <SurfaceCardContent className="space-y-[var(--space-4)] pt-[var(--space-6)]">
-                    <p className="font-[var(--font-mono)] text-[var(--text-xs)] uppercase tracking-[var(--tracking-caps)] text-[var(--accent-primary)]">
+                    <p className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] uppercase tracking-[var(--tracking-caps)] text-[var(--accent-primary)]">
                       Active Preset · data-typography=&quot;{typography}&quot;
                     </p>
-                    <p className="font-[var(--font-display)] text-[var(--text-3xl)] font-semibold leading-[var(--leading-tight)] tracking-[var(--tracking-tight)]">
+                    <p className="font-[family-name:var(--font-display)] text-[length:var(--text-3xl)] font-semibold leading-[var(--leading-tight)] tracking-[var(--tracking-tight)]">
                       Intentional hierarchy through scale, weight, and tracking.
                     </p>
-                    <p className="text-[var(--text-sm)] leading-[var(--leading-relaxed)] text-[var(--text-secondary)]">
-                      Defaulting to Inter or Geist without review is prohibited. Pair <code className="font-[var(--font-mono)]">Newsreader</code>, <code className="font-[var(--font-mono)]">IBM Plex Sans</code>, or <code className="font-[var(--font-mono)]">Plus Jakarta Sans</code> with <code className="font-[var(--font-mono)]">IBM Plex Mono</code> for technical metadata and <code className="font-[var(--font-mono)]">.tabular-nums</code>.
+                    <p className="text-[length:var(--text-sm)] leading-[var(--leading-relaxed)] text-[var(--text-secondary)]">
+                      Defaulting to Inter or Geist without review is prohibited. Pair{" "}
+                      <code className="font-[family-name:var(--font-mono)]">Newsreader</code>,{" "}
+                      <code className="font-[family-name:var(--font-mono)]">IBM Plex Sans</code>, or{" "}
+                      <code className="font-[family-name:var(--font-mono)]">Plus Jakarta Sans</code>{" "}
+                      with{" "}
+                      <code className="font-[family-name:var(--font-mono)]">IBM Plex Mono</code>{" "}
+                      for technical metadata and{" "}
+                      <code className="font-[family-name:var(--font-mono)]">.tabular-nums</code>.
                     </p>
                   </SurfaceCardContent>
-                  <SurfaceCardFooter className="font-[var(--font-mono)] text-[var(--text-xs)] text-[var(--text-muted)]">
+                  <SurfaceCardFooter className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-[var(--text-muted)]">
                     <span>tokens/typography.css</span>
                     <span className="tabular-nums">0123456789 · tabular-nums</span>
                   </SurfaceCardFooter>
@@ -1099,14 +1301,14 @@ ln -s AGENTS.md CLAUDE.md
             <div className="space-y-[var(--space-5)] border-t border-[var(--border-subtle)] pt-[var(--space-10)]">
               <div className="flex flex-wrap items-center justify-between gap-[var(--space-4)]">
                 <div className="space-y-1">
-                  <span className="font-[var(--font-mono)] text-[var(--text-xs)] font-semibold uppercase tracking-[var(--tracking-caps)] text-[var(--accent-primary)]">
+                  <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] font-semibold uppercase tracking-[var(--tracking-caps)] text-[var(--accent-primary)]">
                     Mandatory Pre-Delivery Gate
                   </span>
-                  <h2 className="font-[var(--font-display)] text-[var(--text-2xl)] font-semibold tracking-[var(--tracking-tight)]">
+                  <h2 className="font-[family-name:var(--font-display)] text-[length:var(--text-2xl)] font-semibold tracking-[var(--tracking-tight)]">
                     Section 4 Audit Checklist (AGENTS.md)
                   </h2>
                 </div>
-                <span className="inline-flex items-center gap-[var(--space-2)] rounded-[var(--radius-pill)] border border-[var(--border-default)] bg-[var(--surface-elevated)] px-[var(--space-3)] py-[var(--space-1)] font-[var(--font-mono)] text-[var(--text-xs)] text-[var(--status-success)]">
+                <span className="inline-flex items-center gap-[var(--space-2)] rounded-[var(--radius-pill)] border border-[var(--border-default)] bg-[var(--surface-elevated)] px-[var(--space-3)] py-[var(--space-1)] font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-[var(--status-success)]">
                   <Check className="h-3.5 w-3.5" aria-hidden="true" />
                   <span>6 / 6 Verified on This Site</span>
                 </span>
@@ -1119,14 +1321,14 @@ ln -s AGENTS.md CLAUDE.md
                     className="flex flex-col justify-between gap-[var(--space-3)] rounded-[var(--radius-xl)] border border-[var(--border-subtle)] bg-[var(--surface-elevated)] p-[var(--space-5)]"
                   >
                     <div className="space-y-[var(--space-2)]">
-                      <span className="tabular-nums font-[var(--font-mono)] text-[var(--text-xs)] font-semibold text-[var(--accent-primary)]">
+                      <span className="tabular-nums font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] font-semibold text-[var(--accent-primary)]">
                         0{idx + 1}
                       </span>
-                      <h3 className="text-[var(--text-sm)] font-semibold text-[var(--text-primary)]">
+                      <h3 className="text-[length:var(--text-sm)] font-semibold text-[var(--text-primary)]">
                         {item.question}
                       </h3>
                     </div>
-                    <p className="text-[var(--text-xs)] leading-[var(--leading-normal)] text-[var(--text-secondary)]">
+                    <p className="text-[length:var(--text-xs)] leading-[var(--leading-normal)] text-[var(--text-secondary)]">
                       {item.detail}
                     </p>
                   </div>
@@ -1138,12 +1340,12 @@ ln -s AGENTS.md CLAUDE.md
 
         {/* Minimal Footer */}
         <footer className="border-t border-[var(--border-subtle)] bg-[var(--surface-sunken)] py-[var(--space-8)]">
-          <div className="mx-auto flex max-w-[var(--container-ui)] flex-wrap items-center justify-between gap-[var(--space-4)] px-[var(--space-4)] text-[var(--text-xs)] text-[var(--text-secondary)] sm:px-[var(--space-6)] lg:px-[var(--space-8)]">
+          <div className="mx-auto flex max-w-[var(--container-ui)] flex-wrap items-center justify-between gap-[var(--space-4)] px-[var(--space-4)] text-[length:var(--text-xs)] text-[var(--text-secondary)] sm:px-[var(--space-6)] lg:px-[var(--space-8)]">
             <div className="flex items-center gap-[var(--space-2)]">
               <BookOpen className="h-3.5 w-3.5 text-[var(--text-muted)]" aria-hidden="true" />
               <span>UI Libary — Built with tokens/, primitives/, motion/react, and AGENTS.md</span>
             </div>
-            <div className="flex items-center gap-[var(--space-4)] font-[var(--font-mono)]">
+            <div className="flex items-center gap-[var(--space-4)] font-[family-name:var(--font-mono)]">
               <span className="inline-flex items-center gap-1">
                 <Code2 className="h-3.5 w-3.5" aria-hidden="true" />
                 registry.json

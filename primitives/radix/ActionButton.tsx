@@ -33,9 +33,9 @@ const VARIANT_CLASSES: Record<ActionButtonVariant, string> = {
 };
 
 const SIZE_CLASSES: Record<ActionButtonSize, string> = {
-  sm: "h-8 px-[var(--space-3)] text-[var(--text-xs)] rounded-[var(--radius-sm)]",
-  md: "h-10 px-[var(--space-4)] text-[var(--text-sm)] rounded-[var(--radius-md)]",
-  lg: "h-11 px-[var(--space-5)] text-[var(--text-base)] rounded-[var(--radius-md)]",
+  sm: "h-8 px-[var(--space-3)] text-[length:var(--text-xs)] rounded-[var(--radius-sm)]",
+  md: "h-10 px-[var(--space-4)] text-[length:var(--text-sm)] rounded-[var(--radius-md)]",
+  lg: "h-11 px-[var(--space-5)] text-[length:var(--text-base)] rounded-[var(--radius-md)]",
 };
 
 export const ActionButton = React.forwardRef<
@@ -66,7 +66,7 @@ export const ActionButton = React.forwardRef<
       whileTap={isDisabled || shouldReduceMotion ? undefined : { scale: 0.97 }}
       transition={TACTILE_SPRING}
       className={cx(
-        "inline-flex items-center justify-center gap-[var(--space-2)] font-[var(--font-sans)] font-medium whitespace-nowrap select-none",
+        "inline-flex items-center justify-center gap-[var(--space-2)] font-[family-name:var(--font-sans)] font-medium whitespace-nowrap select-none",
         "transition-colors duration-[var(--duration-fast)]",
         "disabled:pointer-events-none disabled:opacity-45",
         "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]",
