@@ -1,7 +1,7 @@
 /* ==========================================================================
-   UI Libary — Semantic Color Tokens (Light & Dark)
+   UI Libary — Semantic Color Tokens (Light & Dark + Curated Palettes)
    Rules:
-   - No #09090b + purple/cyan/pink gradients or decorative neon glows.
+   - Zero #09090b + purple/cyan/pink gradients or decorative neon glows.
    - Maximum 1 primary accent per view + tonal neutral surfaces + 1px borders.
    - Primary & secondary text maintain WCAG >= 4.5:1 contrast.
    ========================================================================== */
@@ -29,7 +29,7 @@
   --border-default: #d6d3cc;
   --border-strong: #a8a49c;
 
-  /* Single Primary Accent (Signal Cobalt) */
+  /* Default Primary Accent (Signal Cobalt) */
   --accent-primary: #1d4ed8;
   --accent-primary-hover: #1e40af;
   --accent-primary-foreground: #ffffff;
@@ -45,8 +45,8 @@
   --status-danger-subtle: #fef2f2;
 
   /* Focus Ring */
-  --focus-ring: #1d4ed8;
-  --focus-ring-offset: #fafaf9;
+  --focus-ring: var(--accent-primary);
+  --focus-ring-offset: var(--surface-canvas);
 
   /* Skeleton Shimmer Tones */
   --skeleton-base: #eceae5;
@@ -90,7 +90,7 @@
   --border-default: #353531;
   --border-strong: #52514c;
 
-  /* Single Primary Accent (Signal Cobalt — Dark calibrated) */
+  /* Default Primary Accent (Signal Cobalt — Dark calibrated) */
   --accent-primary: #60a5fa;
   --accent-primary-hover: #93c5fd;
   --accent-primary-foreground: #0d1117;
@@ -106,8 +106,8 @@
   --status-danger-subtle: rgba(248, 113, 113, 0.12);
 
   /* Focus Ring */
-  --focus-ring: #60a5fa;
-  --focus-ring-offset: #121211;
+  --focus-ring: var(--accent-primary);
+  --focus-ring-offset: var(--surface-canvas);
 
   /* Skeleton Shimmer Tones */
   --skeleton-base: #22221f;
@@ -147,10 +147,130 @@
     --status-danger: #f87171;
     --status-danger-subtle: rgba(248, 113, 113, 0.12);
 
-    --focus-ring: #60a5fa;
-    --focus-ring-offset: #121211;
+    --focus-ring: var(--accent-primary);
+    --focus-ring-offset: var(--surface-canvas);
 
     --skeleton-base: #22221f;
     --skeleton-highlight: #2c2c28;
   }
+}
+
+/* ==========================================================================
+   Curated Single-Accent Palette Presets ([data-palette])
+   ========================================================================== */
+
+/* 1. Forest Pine */
+[data-palette="pine"][data-theme="light"] {
+  --surface-canvas: #f8faf8;
+  --surface-sunken: #eff3ef;
+  --surface-interactive: #e4ebe5;
+  --border-subtle: #e0e7e1;
+  --border-default: #cbd6cd;
+  --accent-primary: #15803d;
+  --accent-primary-hover: #166534;
+  --accent-primary-foreground: #ffffff;
+  --accent-primary-subtle: #ecfdf3;
+  --accent-primary-border: #bbf7d0;
+}
+
+[data-palette="pine"][data-theme="dark"],
+.dark[data-palette="pine"] {
+  --surface-canvas: #101311;
+  --surface-elevated: #171c19;
+  --surface-sunken: #0b0e0c;
+  --surface-interactive: #212824;
+  --border-subtle: #222a25;
+  --border-default: #313b35;
+  --accent-primary: #4ade80;
+  --accent-primary-hover: #86efac;
+  --accent-primary-foreground: #052e16;
+  --accent-primary-subtle: rgba(74, 222, 128, 0.14);
+  --accent-primary-border: rgba(74, 222, 128, 0.34);
+}
+
+/* 2. Vermilion Ink */
+[data-palette="vermilion"][data-theme="light"] {
+  --surface-canvas: #fbfaf8;
+  --surface-sunken: #f4f1ed;
+  --surface-interactive: #ebe6e0;
+  --border-subtle: #e7e1da;
+  --border-default: #d6cec5;
+  --accent-primary: #b91c1c;
+  --accent-primary-hover: #991b1b;
+  --accent-primary-foreground: #ffffff;
+  --accent-primary-subtle: #fef2f2;
+  --accent-primary-border: #fecaca;
+}
+
+[data-palette="vermilion"][data-theme="dark"],
+.dark[data-palette="vermilion"] {
+  --surface-canvas: #141110;
+  --surface-elevated: #1e1918;
+  --surface-sunken: #0e0c0b;
+  --surface-interactive: #292220;
+  --border-subtle: #2b2321;
+  --border-default: #3d322f;
+  --accent-primary: #f87171;
+  --accent-primary-hover: #fca5a5;
+  --accent-primary-foreground: #2b0909;
+  --accent-primary-subtle: rgba(248, 113, 113, 0.14);
+  --accent-primary-border: rgba(248, 113, 113, 0.34);
+}
+
+/* 3. Ochre Amber */
+[data-palette="amber"][data-theme="light"] {
+  --surface-canvas: #faf9f6;
+  --surface-sunken: #f2efe9;
+  --surface-interactive: #e8e3d9;
+  --border-subtle: #e5dfd3;
+  --border-default: #d3cbbd;
+  --accent-primary: #b45309;
+  --accent-primary-hover: #92400e;
+  --accent-primary-foreground: #ffffff;
+  --accent-primary-subtle: #fffbeb;
+  --accent-primary-border: #fde68a;
+}
+
+[data-palette="amber"][data-theme="dark"],
+.dark[data-palette="amber"] {
+  --surface-canvas: #131210;
+  --surface-elevated: #1c1a17;
+  --surface-sunken: #0d0c0a;
+  --surface-interactive: #26231f;
+  --border-subtle: #282520;
+  --border-default: #3a352d;
+  --accent-primary: #fbbf24;
+  --accent-primary-hover: #fcd34d;
+  --accent-primary-foreground: #1c1303;
+  --accent-primary-subtle: rgba(251, 191, 36, 0.14);
+  --accent-primary-border: rgba(251, 191, 36, 0.34);
+}
+
+/* 4. Swiss Monochrome Ink */
+[data-palette="ink"][data-theme="light"] {
+  --surface-canvas: #fafafa;
+  --surface-sunken: #f2f2f2;
+  --surface-interactive: #e8e8e8;
+  --border-subtle: #e5e5e5;
+  --border-default: #d4d4d4;
+  --accent-primary: #141413;
+  --accent-primary-hover: #2d2d2b;
+  --accent-primary-foreground: #ffffff;
+  --accent-primary-subtle: #f0f0ef;
+  --accent-primary-border: #c7c7c4;
+}
+
+[data-palette="ink"][data-theme="dark"],
+.dark[data-palette="ink"] {
+  --surface-canvas: #111111;
+  --surface-elevated: #1a1a1a;
+  --surface-sunken: #0b0b0b;
+  --surface-interactive: #242424;
+  --border-subtle: #252525;
+  --border-default: #363636;
+  --accent-primary: #f5f4f1;
+  --accent-primary-hover: #dcdad3;
+  --accent-primary-foreground: #111111;
+  --accent-primary-subtle: rgba(245, 244, 241, 0.12);
+  --accent-primary-border: rgba(245, 244, 241, 0.32);
 }

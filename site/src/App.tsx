@@ -14,6 +14,8 @@ import {
   Lock,
   Moon,
   Palette,
+  PanelBottomOpen,
+  RotateCcw,
   ShieldCheck,
   Sliders,
   Sparkles,
@@ -54,6 +56,8 @@ import {
   AppStoreCardTrigger,
 } from "../../components/motion/AppStoreCard";
 import { StickyProductShowcase } from "../../components/motion/StickyProductShowcase";
+import { MotionDrawer } from "../../components/motion/MotionDrawer";
+import { AnimatedNumber } from "../../components/motion/AnimatedNumber";
 import { TACTILE_SPRING } from "../../components/motion/motion-tokens";
 
 import { SegmentedControl } from "../../components/21st-dev/SegmentedControl";
@@ -62,10 +66,20 @@ import { FileTree } from "../../components/21st-dev/FileTree";
 import { ScrollProgress } from "../../components/21st-dev/ScrollProgress";
 import { PricingSelector } from "../../components/21st-dev/PricingSelector";
 import {
+  RemovableTagGroup,
+  StatusTag,
+  type RemovableTagItem,
+} from "../../components/21st-dev/StatusTag";
+import {
+  CommandPromptInput,
+  type PromptMode,
+} from "../../components/21st-dev/CommandPromptInput";
+import {
   KpiMetricCard,
   KpiMetricCardError,
   KpiMetricCardSkeleton,
 } from "../../components/data-viz/KpiMetricCard";
+import { BarDistribution } from "../../components/data-viz/BarDistribution";
 import { EmptyState, SkeletonBlock } from "../../components/feedback/StateNotice";
 
 import { HeroEditorial } from "../../patterns/hero-editorial/HeroEditorial";
@@ -74,16 +88,29 @@ import { AuthMinimal } from "../../patterns/auth-minimal/AuthMinimal";
 
 import {
   AUDIT_CHECKLIST,
+  BAR_CHART_DATA,
   COLOR_SWATCHES,
+  ELEVATION_TOKENS,
   FILE_DESCRIPTIONS,
+  INITIAL_STATUS_TAGS,
+  PALETTE_PRESETS,
   PRICING_TIERS,
+  RADIUS_TOKENS,
   REGISTRY_ACTIONS,
   REPO_TREE_NODES,
   SHOWCASE_CHAPTERS,
+  TYPOGRAPHY_SCALE,
+  type PaletteId,
 } from "./data/showcase-data";
 
 type ThemeMode = "light" | "dark";
 type TypographyMode = "technical" | "editorial" | "geometric";
+
+interface DispatchedPrompt {
+  id: string;
+  mode: PromptMode;
+  prompt: string;
+}
 
 function StickyStageVisual({ progress }: { progress: MotionValue<number> }) {
   const tokenScale = useTransform(progress, [0, 0.35, 1], [0.96, 1, 1]);
@@ -111,7 +138,6 @@ function StickyStageVisual({ progress }: { progress: MotionValue<number> }) {
         </span>
       </div>
 
-      {/* Scroll-linked spring response curve */}
       <div className="my-auto space-y-[var(--space-4)] py-[var(--space-4)]">
         <div className="rounded-[var(--radius-lg)] border border-[var(--border-subtle)] bg-[var(--surface-elevated)] p-[var(--space-4)]">
           <div className="mb-[var(--space-3)] flex items-center justify-between">
@@ -222,20 +248,44 @@ function StickyStageVisual({ progress }: { progress: MotionValue<number> }) {
 
 export function App() {
   const [theme, setTheme] = React.useState<ThemeMode>("light");
+  const [palette, setPalette] = React.useState<PaletteId>("cobalt");
   const [typography, setTypography] =
     React.useState<TypographyMode>("editorial");
 
   const [selectedFileId, setSelectedFileId] = React.useState("comp-tabs");
   const [copiedSync, setCopiedSync] = React.useState(false);
+
+  const [primClicks, setPrimClicks] = React.useState(0);
+  const [primLoading, setPrimLoading] = React.useState(false);
+
   const [tabsVariant, setTabsVariant] = React.useState<"tabs" | "dock">("tabs");
   const [panelState, setPanelState] = React.useState<
     "default" | "loading" | "empty" | "error"
   >("default");
 
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const [counterSeed, setCounterSeed] = React.useState(0);
   const [showCardSkeleton, setShowCardSkeleton] = React.useState(false);
+
   const [kpiState, setKpiState] = React.useState<"live" | "loading" | "error">(
     "live"
   );
+  const [chartWindow, setChartWindow] = React.useState<"7d" | "30d" | "90d">(
+    "7d"
+  );
+  const [tags, setTags] = React.useState<readonly RemovableTagItem[]>(
+    INITIAL_STATUS_TAGS
+  );
+  const [dispatchedPrompts, setDispatchedPrompts] = React.useState<
+    readonly DispatchedPrompt[]
+  >([
+    {
+      id: "init-1",
+      mode: "registry",
+      prompt: "Compose an analytics shell with KpiMetricCard and BarDistribution.",
+    },
+  ]);
+
   const [selectedActionMsg, setSelectedActionMsg] = React.useState(
     "Select an action above or navigate with ArrowUp / ArrowDown + Enter."
   );
@@ -253,11 +303,26 @@ export function App() {
   }, [theme]);
 
   React.useEffect(() => {
+    document.documentElement.setAttribute("data-palette", palette);
+  }, [palette]);
+
+  React.useEffect(() => {
     document.documentElement.setAttribute("data-typography", typography);
   }, [typography]);
 
   const activeFileInfo =
     FILE_DESCRIPTIONS[selectedFileId] ?? FILE_DESCRIPTIONS["comp-tabs"];
+  const activePaletteInfo =
+    PALETTE_PRESETS.find((p) => p.id === palette) ?? {
+      id: "cobalt" as const,
+      name: "Signal Cobalt",
+      tagline: "Warm alabaster + crisp cobalt ink",
+      lightAccent: "#1d4ed8",
+      darkAccent: "#60a5fa",
+      lightCanvas: "#fafaf9",
+      darkCanvas: "#121211",
+      contrastLabel: "6.7 : 1",
+    };
 
   const syncSnippet = `# Sync Claude Code with AGENTS.md
 ln -s AGENTS.md CLAUDE.md
@@ -273,6 +338,14 @@ ln -s AGENTS.md CLAUDE.md
     } catch {
       setCopiedSync(false);
     }
+  };
+
+  const handleSimulatePrimLoading = () => {
+    setPrimLoading(true);
+    setTimeout(() => {
+      setPrimLoading(false);
+      setPrimClicks((c) => c + 1);
+    }, 650);
   };
 
   return (
@@ -298,13 +371,19 @@ ln -s AGENTS.md CLAUDE.md
 
               <nav
                 aria-label="Primary documentation sections"
-                className="hidden items-center gap-[var(--space-5)] text-[length:var(--text-sm)] font-medium text-[var(--text-secondary)] md:flex"
+                className="hidden items-center gap-[var(--space-5)] text-[length:var(--text-sm)] font-medium text-[var(--text-secondary)] lg:flex"
               >
                 <a
                   href="#architecture"
                   className="rounded-[var(--radius-xs)] transition-colors hover:text-[var(--text-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]"
                 >
                   Architecture
+                </a>
+                <a
+                  href="#primitives"
+                  className="rounded-[var(--radius-xs)] transition-colors hover:text-[var(--text-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]"
+                >
+                  Primitives
                 </a>
                 <a
                   href="#motion"
@@ -319,21 +398,51 @@ ln -s AGENTS.md CLAUDE.md
                   Components
                 </a>
                 <a
-                  href="#patterns"
-                  className="rounded-[var(--radius-xs)] transition-colors hover:text-[var(--text-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]"
-                >
-                  Patterns
-                </a>
-                <a
                   href="#tokens"
                   className="rounded-[var(--radius-xs)] transition-colors hover:text-[var(--text-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]"
                 >
-                  Tokens
+                  Palettes &amp; Tokens
                 </a>
               </nav>
             </div>
 
-            <div className="flex items-center gap-[var(--space-3)]">
+            <div className="flex flex-wrap items-center gap-[var(--space-3)]">
+              {/* Quick Palette Dot Selector */}
+              <div
+                role="group"
+                aria-label="Quick accent palette selector"
+                className="flex items-center gap-1.5 rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--surface-sunken)] px-2 py-1"
+              >
+                {PALETTE_PRESETS.map((preset) => {
+                  const active = palette === preset.id;
+                  const dotColor =
+                    theme === "light" ? preset.lightAccent : preset.darkAccent;
+                  return (
+                    <motion.button
+                      key={preset.id}
+                      type="button"
+                      title={`${preset.name} palette`}
+                      aria-label={`Use ${preset.name} palette`}
+                      aria-pressed={active}
+                      whileTap={{ scale: 0.9 }}
+                      transition={TACTILE_SPRING}
+                      onClick={() => setPalette(preset.id)}
+                      className={`relative flex h-5 w-5 items-center justify-center rounded-[var(--radius-pill)] border transition-transform focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)] ${
+                        active
+                          ? "border-[var(--text-primary)] scale-105"
+                          : "border-[var(--border-default)] opacity-75 hover:opacity-100"
+                      }`}
+                    >
+                      <span
+                        aria-hidden="true"
+                        className="h-3 w-3 rounded-[var(--radius-pill)]"
+                        style={{ backgroundColor: dotColor }}
+                      />
+                    </motion.button>
+                  );
+                })}
+              </div>
+
               <div className="hidden sm:block">
                 <SegmentedControl
                   ariaLabel="Typography pairing"
@@ -382,15 +491,15 @@ ln -s AGENTS.md CLAUDE.md
 
         {/* Asymmetric Editorial Hero */}
         <HeroEditorial
-          eyebrow="Design Engineering System · v0.2"
+          eyebrow={`Design Engineering System · v0.3 · ${activePaletteInfo.name}`}
           headline="Precision UI without statistical AI slop."
-          summary="A four-layer registry of semantic CSS tokens, accessible primitives, Apple-calibrated motion/react components, and anti-slop rules built to keep Claude Code, Codex, and Antigravity aligned."
+          summary="A four-layer registry of multi-palette CSS tokens, accessible primitives, Apple-calibrated motion/react components, and anti-slop rules built to keep Claude Code, Codex, and Antigravity aligned."
           primaryAction={{ label: "Explore live components", href: "#motion" }}
-          secondaryAction={{ label: "How agents sync", href: "#architecture" }}
+          secondaryAction={{ label: "Switch color palettes", href: "#tokens" }}
           specs={[
-            { label: "Architecture", value: "4 Layers" },
+            { label: "Registry", value: "22 Blocks" },
+            { label: "Palettes", value: "5 Presets" },
             { label: "Tactile Spring", value: "380 / 32 / 0.8" },
-            { label: "Primary Contrast", value: "17.5 : 1" },
           ]}
           artifact={
             <div className="space-y-[var(--space-4)] rounded-[var(--radius-xl)] border border-[var(--border-default)] bg-[var(--surface-sunken)] p-[var(--space-4)] shadow-[var(--shadow-card)]">
@@ -428,7 +537,7 @@ ln -s AGENTS.md CLAUDE.md
 
                   <div className="mt-[var(--space-5)] flex items-center justify-between border-t border-[var(--border-subtle)] pt-[var(--space-3)] font-[family-name:var(--font-mono)] text-[11px] text-[var(--text-muted)]">
                     <span>registry.json</span>
-                    <span className="text-[var(--status-success)]">Indexed</span>
+                    <span className="text-[var(--status-success)]">22 Indexed</span>
                   </div>
                 </div>
               </div>
@@ -532,7 +641,7 @@ ln -s AGENTS.md CLAUDE.md
                         },
                         {
                           layer: "Layer 2 · components/",
-                          desc: "Motion blocks, curated 21st.dev pieces, KPI cards, and feedback notices.",
+                          desc: "Motion blocks, curated 21st.dev pieces, KPI/Bar charts, and feedback notices.",
                         },
                         {
                           layer: "Layer 3 · patterns/",
@@ -579,6 +688,143 @@ ln -s AGENTS.md CLAUDE.md
           </div>
         </section>
 
+        {/* Section 1b: Layer 1 Primitives Gallery */}
+        <section
+          id="primitives"
+          className="border-b border-[var(--border-subtle)] bg-[var(--surface-sunken)]/55 py-[var(--space-16)]"
+        >
+          <div className="mx-auto max-w-[var(--container-ui)] space-y-[var(--space-8)] px-[var(--space-4)] sm:px-[var(--space-6)] lg:px-[var(--space-8)]">
+            <div className="flex flex-wrap items-end justify-between gap-[var(--space-4)]">
+              <div className="space-y-[var(--space-2)]">
+                <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] font-semibold uppercase tracking-[var(--tracking-caps)] text-[var(--accent-primary)]">
+                  Layer 1 · Accessible Primitives
+                </span>
+                <h2 className="font-[family-name:var(--font-display)] text-[length:var(--text-3xl)] font-semibold leading-[var(--leading-tight)] tracking-[var(--tracking-tight)]">
+                  Tactile buttons &amp; composable surface cards.
+                </h2>
+              </div>
+              <p className="max-w-[46ch] text-[length:var(--text-sm)] leading-[var(--leading-normal)] text-[var(--text-secondary)]">
+                Every higher-order block composes{" "}
+                <code className="font-[family-name:var(--font-mono)]">ActionButton</code>{" "}
+                and{" "}
+                <code className="font-[family-name:var(--font-mono)]">SurfaceCard</code>{" "}
+                instead of duplicating raw HTML or inline shadows.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 gap-[var(--space-6)] lg:grid-cols-12">
+              <SurfaceCard className="lg:col-span-7">
+                <SurfaceCardHeader className="border-b border-[var(--border-subtle)]">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <SurfaceCardTitle>ActionButton Matrix</SurfaceCardTitle>
+                    <span className="tabular-nums rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--surface-sunken)] px-2.5 py-1 font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-[var(--text-secondary)]">
+                      Taps: {primClicks}
+                    </span>
+                  </div>
+                  <SurfaceCardDescription>
+                    Four semantic variants, three density sizes (<code className="font-[family-name:var(--font-mono)]">sm</code> / <code className="font-[family-name:var(--font-mono)]">md</code> / <code className="font-[family-name:var(--font-mono)]">lg</code>), and tactile <code className="font-[family-name:var(--font-mono)]">scale(0.97)</code> tap compression.
+                  </SurfaceCardDescription>
+                </SurfaceCardHeader>
+                <SurfaceCardContent className="space-y-[var(--space-5)] pt-[var(--space-6)]">
+                  <div className="flex flex-wrap items-center gap-[var(--space-3)]">
+                    <ActionButton
+                      variant="primary"
+                      onClick={() => setPrimClicks((c) => c + 1)}
+                    >
+                      Primary Action
+                    </ActionButton>
+                    <ActionButton
+                      variant="secondary"
+                      onClick={() => setPrimClicks((c) => c + 1)}
+                    >
+                      Secondary
+                    </ActionButton>
+                    <ActionButton
+                      variant="outline"
+                      onClick={() => setPrimClicks((c) => c + 1)}
+                    >
+                      Outline
+                    </ActionButton>
+                    <ActionButton
+                      variant="ghost"
+                      onClick={() => setPrimClicks((c) => c + 1)}
+                    >
+                      Ghost
+                    </ActionButton>
+                    <ActionButton
+                      variant="primary"
+                      loading={primLoading}
+                      onClick={handleSimulatePrimLoading}
+                    >
+                      {primLoading ? "Working..." : "Trigger Loading"}
+                    </ActionButton>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-[var(--space-3)] border-t border-[var(--border-subtle)] pt-[var(--space-5)]">
+                    <span className="mr-2 font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-[var(--text-muted)]">
+                      Sizes:
+                    </span>
+                    <ActionButton
+                      size="sm"
+                      variant="outline"
+                      onClick={() => setPrimClicks((c) => c + 1)}
+                    >
+                      Small · 32px
+                    </ActionButton>
+                    <ActionButton
+                      size="md"
+                      variant="outline"
+                      onClick={() => setPrimClicks((c) => c + 1)}
+                    >
+                      Medium · 40px
+                    </ActionButton>
+                    <ActionButton
+                      size="lg"
+                      variant="outline"
+                      onClick={() => setPrimClicks((c) => c + 1)}
+                    >
+                      Large · 44px
+                    </ActionButton>
+                  </div>
+                </SurfaceCardContent>
+                <SurfaceCardFooter className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-[var(--text-muted)]">
+                  <span>primitives/radix/ActionButton.tsx</span>
+                  <span>:focus-visible · 2px offset</span>
+                </SurfaceCardFooter>
+              </SurfaceCard>
+
+              <SurfaceCard className="flex flex-col justify-between lg:col-span-5">
+                <SurfaceCardHeader className="border-b border-[var(--border-subtle)]">
+                  <SurfaceCardTitle>SurfaceCard Anatomy</SurfaceCardTitle>
+                  <SurfaceCardDescription>
+                    Structured Header, Content, and Footer slots enforcing concentric outer/inner corner radii.
+                  </SurfaceCardDescription>
+                </SurfaceCardHeader>
+                <SurfaceCardContent className="space-y-[var(--space-3)] pt-[var(--space-5)]">
+                  <div className="rounded-[var(--radius-lg)] border border-[var(--border-subtle)] bg-[var(--surface-sunken)] p-[var(--space-4)]">
+                    <div className="flex items-center justify-between font-[family-name:var(--font-mono)] text-[length:var(--text-xs)]">
+                      <span className="text-[var(--text-muted)]">Outer Card Radius</span>
+                      <span className="tabular-nums font-semibold text-[var(--text-primary)]">20px (--radius-xl)</span>
+                    </div>
+                    <div className="mt-2 flex items-center justify-between font-[family-name:var(--font-mono)] text-[length:var(--text-xs)]">
+                      <span className="text-[var(--text-muted)]">Nested Well Radius</span>
+                      <span className="tabular-nums font-semibold text-[var(--accent-primary)]">14px (--radius-lg)</span>
+                    </div>
+                    <div className="mt-2 flex items-center justify-between font-[family-name:var(--font-mono)] text-[length:var(--text-xs)]">
+                      <span className="text-[var(--text-muted)]">Border Hairline</span>
+                      <span className="tabular-nums font-semibold text-[var(--text-primary)]">1px solid --border-subtle</span>
+                    </div>
+                  </div>
+                </SurfaceCardContent>
+                <SurfaceCardFooter className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-[var(--text-muted)]">
+                  <span>primitives/radix/SurfaceCard.tsx</span>
+                  <span className="text-[var(--status-success)]">Composable</span>
+                </SurfaceCardFooter>
+              </SurfaceCard>
+            </div>
+          </div>
+        </section>
+
         {/* Section 2: Apple-Grade Motion Showcase */}
         <section
           id="motion"
@@ -591,7 +837,7 @@ ln -s AGENTS.md CLAUDE.md
                   02 · Motion Primitives
                 </span>
                 <h2 className="font-[family-name:var(--font-display)] text-[length:var(--text-3xl)] font-semibold leading-[var(--leading-tight)] tracking-[var(--tracking-tight)]">
-                  Tactile springs, spatial continuity, and real states.
+                  Tactile springs, spatial continuity, and draggable sheets.
                 </h2>
               </div>
               <p className="max-w-[44ch] text-[length:var(--text-sm)] leading-[var(--leading-normal)] text-[var(--text-secondary)]">
@@ -751,6 +997,88 @@ ln -s AGENTS.md CLAUDE.md
                 </TactileTabs>
               </SurfaceCardContent>
             </SurfaceCard>
+
+            {/* AnimatedNumber & MotionDrawer Unequal Pair */}
+            <div className="grid grid-cols-1 gap-[var(--space-6)] lg:grid-cols-12">
+              <SurfaceCard className="lg:col-span-7">
+                <SurfaceCardHeader className="border-b border-[var(--border-subtle)] sm:flex-row sm:items-center sm:justify-between">
+                  <div className="space-y-1">
+                    <SurfaceCardTitle>AnimatedNumber (Tabular Telemetry)</SurfaceCardTitle>
+                    <SurfaceCardDescription>
+                      Viewport-triggered counters using{" "}
+                      <code className="font-[family-name:var(--font-mono)]">APPLE_EASE_OUT</code>{" "}
+                      and locked{" "}
+                      <code className="font-[family-name:var(--font-mono)]">tabular-nums</code>{" "}
+                      column width.
+                    </SurfaceCardDescription>
+                  </div>
+                  <ActionButton
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setCounterSeed((s) => s + 1)}
+                  >
+                    <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
+                    <span>Replay</span>
+                  </ActionButton>
+                </SurfaceCardHeader>
+                <SurfaceCardContent className="pt-[var(--space-6)]">
+                  <div
+                    key={counterSeed}
+                    className="grid grid-cols-1 gap-[var(--space-4)] sm:grid-cols-3"
+                  >
+                    <div className="rounded-[var(--radius-lg)] border border-[var(--border-subtle)] bg-[var(--surface-sunken)] p-[var(--space-4)]">
+                      <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-[var(--text-muted)]">
+                        Indexed Blocks
+                      </span>
+                      <p className="mt-2 font-[family-name:var(--font-display)] text-[length:var(--text-3xl)] font-semibold text-[var(--text-primary)]">
+                        <AnimatedNumber value={22} />
+                      </p>
+                    </div>
+                    <div className="rounded-[var(--radius-lg)] border border-[var(--border-subtle)] bg-[var(--surface-sunken)] p-[var(--space-4)]">
+                      <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-[var(--text-muted)]">
+                        Primary Contrast
+                      </span>
+                      <p className="mt-2 font-[family-name:var(--font-display)] text-[length:var(--text-3xl)] font-semibold text-[var(--accent-primary)]">
+                        <AnimatedNumber value={17.5} decimals={1} suffix=":1" />
+                      </p>
+                    </div>
+                    <div className="rounded-[var(--radius-lg)] border border-[var(--border-subtle)] bg-[var(--surface-sunken)] p-[var(--space-4)]">
+                      <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-[var(--text-muted)]">
+                        Frame Target
+                      </span>
+                      <p className="mt-2 font-[family-name:var(--font-display)] text-[length:var(--text-3xl)] font-semibold text-[var(--status-success)]">
+                        <AnimatedNumber value={60} suffix=" fps" />
+                      </p>
+                    </div>
+                  </div>
+                </SurfaceCardContent>
+              </SurfaceCard>
+
+              <SurfaceCard className="flex flex-col justify-between lg:col-span-5">
+                <SurfaceCardHeader className="border-b border-[var(--border-subtle)]">
+                  <SurfaceCardTitle>MotionDrawer (Interactive Sheet)</SurfaceCardTitle>
+                  <SurfaceCardDescription>
+                    Apple-calibrated sheet with downward{" "}
+                    <code className="font-[family-name:var(--font-mono)]">drag=&quot;y&quot;</code>{" "}
+                    elastic dismissal, backdrop fade, and focus restoration.
+                  </SurfaceCardDescription>
+                </SurfaceCardHeader>
+                <SurfaceCardContent className="space-y-[var(--space-4)] pt-[var(--space-6)]">
+                  <div className="flex items-center justify-between rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--surface-sunken)] px-[var(--space-4)] py-[var(--space-3)] font-[family-name:var(--font-mono)] text-[length:var(--text-xs)]">
+                    <span className="text-[var(--text-secondary)]">Active Runtime Token Snapshot</span>
+                    <span className="text-[var(--accent-primary)]">{activePaletteInfo.id} · {theme}</span>
+                  </div>
+                  <ActionButton
+                    variant="primary"
+                    className="w-full"
+                    onClick={() => setDrawerOpen(true)}
+                  >
+                    <PanelBottomOpen className="h-4 w-4" aria-hidden="true" />
+                    <span>Open Draggable Sheet</span>
+                  </ActionButton>
+                </SurfaceCardContent>
+              </SurfaceCard>
+            </div>
 
             {/* App Store Expandable Card Gallery */}
             <div className="space-y-[var(--space-5)]">
@@ -940,7 +1268,7 @@ ln -s AGENTS.md CLAUDE.md
                                 --accent-primary
                               </span>
                               <span className="tabular-nums font-[family-name:var(--font-mono)] text-[11px] text-[var(--accent-primary)]">
-                                6.7:1
+                                {activePaletteInfo.contrastLabel}
                               </span>
                             </div>
                           </div>
@@ -981,7 +1309,7 @@ ln -s AGENTS.md CLAUDE.md
         <StickyProductShowcase
           sectionLabel="02b · Scroll-Linked Choreography (StickyProductShowcase)"
           chapters={SHOWCASE_CHAPTERS}
-          cta={{ label: "Inspect token palette", href: "#tokens" }}
+          cta={{ label: "Inspect token palettes", href: "#tokens" }}
           renderVisual={(progress) => <StickyStageVisual progress={progress} />}
         />
 
@@ -1004,6 +1332,7 @@ ln -s AGENTS.md CLAUDE.md
               </p>
             </div>
 
+            {/* Row A: PricingSelector + KpiMetricCard */}
             <div className="grid grid-cols-1 items-start gap-[var(--space-8)] lg:grid-cols-12">
               <div className="space-y-[var(--space-4)] lg:col-span-5">
                 <PricingSelector
@@ -1083,10 +1412,10 @@ ln -s AGENTS.md CLAUDE.md
                     />
                     <KpiMetricCard
                       label="Registry Items"
-                      value="17"
-                      delta="+14 blocks"
+                      value="22"
+                      delta="+5 blocks"
                       trend="positive"
-                      period="v0.2.0"
+                      period="v0.3.0"
                     />
                     <KpiMetricCard
                       label="AI Slop Gradients"
@@ -1101,8 +1430,115 @@ ln -s AGENTS.md CLAUDE.md
               </div>
             </div>
 
+            {/* Row B: StatusTag + CommandPromptInput + BarDistribution */}
+            <div className="grid grid-cols-1 items-start gap-[var(--space-8)] border-t border-[var(--border-subtle)] pt-[var(--space-10)] lg:grid-cols-12">
+              <div className="space-y-[var(--space-6)] lg:col-span-6">
+                <SurfaceCard>
+                  <SurfaceCardHeader className="border-b border-[var(--border-subtle)]">
+                    <SurfaceCardTitle>StatusTag &amp; RemovableTagGroup</SurfaceCardTitle>
+                    <SurfaceCardDescription>
+                      Semantic status indicators paired with{" "}
+                      <code className="font-[family-name:var(--font-mono)]">layout</code> +{" "}
+                      <code className="font-[family-name:var(--font-mono)]">AnimatePresence mode=&quot;popLayout&quot;</code>{" "}
+                      tag dismissal.
+                    </SurfaceCardDescription>
+                  </SurfaceCardHeader>
+                  <SurfaceCardContent className="space-y-[var(--space-5)] pt-[var(--space-5)]">
+                    <div className="flex flex-wrap gap-[var(--space-2)]">
+                      <StatusTag tone="success" label="WCAG Pass" />
+                      <StatusTag tone="accent" label={activePaletteInfo.name} />
+                      <StatusTag tone="warning" label="Review Pending" />
+                      <StatusTag tone="danger" label="Raw Hex Blocked" />
+                      <StatusTag tone="neutral" label="v0.3.0" />
+                    </div>
+
+                    <div className="space-y-2 border-t border-[var(--border-subtle)] pt-[var(--space-4)]">
+                      <span className="block font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[var(--tracking-caps)] text-[var(--text-muted)]">
+                        Interactive Filter Chips (Click X to remove)
+                      </span>
+                      <RemovableTagGroup
+                        items={tags}
+                        onRemove={(id) =>
+                          setTags((prev) => prev.filter((item) => item.id !== id))
+                        }
+                        onReset={() => setTags(INITIAL_STATUS_TAGS)}
+                      />
+                    </div>
+                  </SurfaceCardContent>
+                </SurfaceCard>
+
+                <div className="space-y-[var(--space-3)]">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-[family-name:var(--font-display)] text-[length:var(--text-lg)] font-semibold">
+                      CommandPromptInput
+                    </h3>
+                    <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-[var(--text-muted)]">
+                      Enter to dispatch
+                    </span>
+                  </div>
+                  <CommandPromptInput
+                    onSubmitPrompt={(payload) =>
+                      setDispatchedPrompts((prev) => [
+                        {
+                          id: `${Date.now()}`,
+                          mode: payload.mode,
+                          prompt: payload.prompt,
+                        },
+                        ...prev.slice(0, 2),
+                      ])
+                    }
+                  />
+                  <div className="space-y-2">
+                    {dispatchedPrompts.map((entry) => (
+                      <div
+                        key={entry.id}
+                        className="flex items-start justify-between gap-[var(--space-3)] rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--surface-sunken)] px-[var(--space-3)] py-[var(--space-2)] text-[length:var(--text-xs)]"
+                      >
+                        <span className="text-[var(--text-primary)]">{entry.prompt}</span>
+                        <span className="shrink-0 rounded-[var(--radius-xs)] border border-[var(--border-default)] bg-[var(--surface-elevated)] px-1.5 py-0.5 font-[family-name:var(--font-mono)] text-[11px] uppercase text-[var(--accent-primary)]">
+                          {entry.mode}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-[var(--space-4)] lg:col-span-6">
+                <div className="flex flex-wrap items-center justify-between gap-[var(--space-3)]">
+                  <div>
+                    <h3 className="font-[family-name:var(--font-display)] text-[length:var(--text-xl)] font-semibold">
+                      BarDistribution Telemetry
+                    </h3>
+                    <p className="text-[length:var(--text-xs)] text-[var(--text-secondary)]">
+                      Hover or focus any bar to inspect exact{" "}
+                      <code className="font-[family-name:var(--font-mono)]">tabular-nums</code>{" "}
+                      readings.
+                    </p>
+                  </div>
+                  <SegmentedControl
+                    ariaLabel="Telemetry window"
+                    value={chartWindow}
+                    onValueChange={setChartWindow}
+                    options={[
+                      { value: "7d", label: "7d" },
+                      { value: "30d", label: "30d" },
+                      { value: "90d", label: "90d" },
+                    ]}
+                  />
+                </div>
+
+                <BarDistribution
+                  key={chartWindow}
+                  title="Anti-Slop Audit Pass Rate"
+                  subtitle={`Token & spring compliance across ${chartWindow} window`}
+                  data={BAR_CHART_DATA[chartWindow]}
+                />
+              </div>
+            </div>
+
             {/* Patterns Interactive Preview */}
-            <div id="patterns" className="space-y-[var(--space-6)] pt-[var(--space-6)]">
+            <div id="patterns" className="space-y-[var(--space-6)] border-t border-[var(--border-subtle)] pt-[var(--space-10)]">
               <div className="flex flex-wrap items-center justify-between gap-[var(--space-4)]">
                 <div className="space-y-1">
                   <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] font-semibold uppercase tracking-[var(--tracking-caps)] text-[var(--accent-primary)]">
@@ -1140,7 +1576,7 @@ ln -s AGENTS.md CLAUDE.md
                       id: "registry",
                       label: "Registry",
                       icon: <FolderTree className="h-4 w-4" />,
-                      badge: 17,
+                      badge: 22,
                     },
                     {
                       id: "audit",
@@ -1204,21 +1640,103 @@ ln -s AGENTS.md CLAUDE.md
           </div>
         </section>
 
-        {/* Section 4: Tokens & Anti-Slop Audit Reference */}
+        {/* Section 4: Palettes, Typography Ruler, Spatial Tokens & Audit */}
         <section id="tokens" className="py-[var(--space-16)]">
           <div className="mx-auto max-w-[var(--container-ui)] space-y-[var(--space-12)] px-[var(--space-4)] sm:px-[var(--space-6)] lg:px-[var(--space-8)]">
+            {/* Interactive 5-Palette Studio */}
+            <div className="space-y-[var(--space-5)]">
+              <div className="flex flex-wrap items-end justify-between gap-[var(--space-4)]">
+                <div className="space-y-[var(--space-2)]">
+                  <div className="flex items-center gap-[var(--space-2)] text-[var(--accent-primary)]">
+                    <Palette className="h-4 w-4" aria-hidden="true" />
+                    <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] font-semibold uppercase tracking-[var(--tracking-caps)]">
+                      04 · Curated Single-Accent Palettes
+                    </span>
+                  </div>
+                  <h2 className="font-[family-name:var(--font-display)] text-[length:var(--text-3xl)] font-semibold tracking-[var(--tracking-tight)]">
+                    Five calibrated palettes for light &amp; dark surfaces.
+                  </h2>
+                </div>
+                <p className="max-w-[46ch] text-[length:var(--text-sm)] text-[var(--text-secondary)]">
+                  Select any preset below to live-theme the entire documentation site via{" "}
+                  <code className="font-[family-name:var(--font-mono)]">[data-palette]</code>{" "}
+                  in{" "}
+                  <code className="font-[family-name:var(--font-mono)]">tokens/colors.css</code>.
+                </p>
+              </div>
+
+              <div
+                role="radiogroup"
+                aria-label="Design system color palette presets"
+                className="grid grid-cols-1 gap-[var(--space-4)] sm:grid-cols-2 lg:grid-cols-5"
+              >
+                {PALETTE_PRESETS.map((preset) => {
+                  const selected = palette === preset.id;
+                  const accent =
+                    theme === "light" ? preset.lightAccent : preset.darkAccent;
+                  const canvas =
+                    theme === "light" ? preset.lightCanvas : preset.darkCanvas;
+                  return (
+                    <motion.button
+                      key={preset.id}
+                      type="button"
+                      role="radio"
+                      aria-checked={selected}
+                      whileTap={{ scale: 0.98 }}
+                      transition={TACTILE_SPRING}
+                      onClick={() => setPalette(preset.id)}
+                      className={`flex flex-col justify-between gap-[var(--space-4)] rounded-[var(--radius-xl)] border p-[var(--space-4)] text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)] ${
+                        selected
+                          ? "border-[var(--accent-primary)] bg-[var(--accent-primary-subtle)] shadow-[var(--shadow-card)]"
+                          : "border-[var(--border-default)] bg-[var(--surface-elevated)] hover:border-[var(--border-strong)]"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-1.5">
+                          <span
+                            aria-hidden="true"
+                            className="h-5 w-5 rounded-[var(--radius-pill)] border border-[var(--border-default)]"
+                            style={{ backgroundColor: accent }}
+                          />
+                          <span
+                            aria-hidden="true"
+                            className="h-5 w-5 rounded-[var(--radius-pill)] border border-[var(--border-default)]"
+                            style={{ backgroundColor: canvas }}
+                          />
+                        </div>
+                        <span className="tabular-nums font-[family-name:var(--font-mono)] text-[11px] text-[var(--text-muted)]">
+                          {preset.contrastLabel}
+                        </span>
+                      </div>
+
+                      <div>
+                        <p className="font-[family-name:var(--font-display)] text-[length:var(--text-base)] font-semibold text-[var(--text-primary)]">
+                          {preset.name}
+                        </p>
+                        <p className="mt-0.5 text-[length:var(--text-xs)] text-[var(--text-secondary)]">
+                          {preset.tagline}
+                        </p>
+                      </div>
+
+                      <div className="flex items-center justify-between border-t border-[var(--border-subtle)] pt-[var(--space-2)] font-[family-name:var(--font-mono)] text-[11px]">
+                        <span className="text-[var(--text-muted)]">data-palette=&quot;{preset.id}&quot;</span>
+                        {selected ? (
+                          <span className="font-semibold text-[var(--accent-primary)]">Active</span>
+                        ) : null}
+                      </div>
+                    </motion.button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Live Swatch Matrix + Typography Scale Ruler */}
             <div className="grid grid-cols-1 gap-[var(--space-8)] lg:grid-cols-12">
               {/* Semantic Color Swatches */}
-              <div className="space-y-[var(--space-5)] lg:col-span-6">
-                <div className="flex items-center gap-[var(--space-2)] text-[var(--accent-primary)]">
-                  <Palette className="h-4 w-4" aria-hidden="true" />
-                  <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] font-semibold uppercase tracking-[var(--tracking-caps)]">
-                    04 · Semantic Tokens
-                  </span>
-                </div>
-                <h2 className="font-[family-name:var(--font-display)] text-[length:var(--text-2xl)] font-semibold tracking-[var(--tracking-tight)]">
-                  Color Palette ({theme === "light" ? "Light Mode" : "Dark Mode"})
-                </h2>
+              <div className="space-y-[var(--space-4)] lg:col-span-5">
+                <h3 className="font-[family-name:var(--font-display)] text-[length:var(--text-2xl)] font-semibold tracking-[var(--tracking-tight)]">
+                  Live Semantic Tokens ({activePaletteInfo.name} · {theme})
+                </h3>
 
                 <div className="overflow-hidden rounded-[var(--radius-xl)] border border-[var(--border-default)] bg-[var(--surface-elevated)]">
                   {COLOR_SWATCHES.map((swatch) => (
@@ -1229,33 +1747,33 @@ ln -s AGENTS.md CLAUDE.md
                       <div className="flex items-center gap-[var(--space-3)]">
                         <span
                           aria-hidden="true"
-                          className="h-7 w-7 shrink-0 rounded-[var(--radius-sm)] border border-[var(--border-default)]"
+                          className="h-6 w-6 shrink-0 rounded-[var(--radius-sm)] border border-[var(--border-default)]"
                           style={{ backgroundColor: `var(${swatch.token})` }}
                         />
                         <div>
                           <p className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] font-semibold text-[var(--text-primary)]">
                             {swatch.token}
                           </p>
-                          <p className="text-[length:var(--text-xs)] text-[var(--text-muted)]">
+                          <p className="text-[11px] text-[var(--text-muted)]">
                             {swatch.role}
                           </p>
                         </div>
                       </div>
-                      <span className="tabular-nums font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-[var(--text-secondary)]">
-                        {theme === "light" ? swatch.light : swatch.dark}
+                      <span className="font-[family-name:var(--font-mono)] text-[11px] text-[var(--text-secondary)]">
+                        CSS var
                       </span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Typography Pairing Live Specimen */}
-              <div className="space-y-[var(--space-5)] lg:col-span-6">
+              {/* Typography Pairing & Scale Ruler */}
+              <div className="space-y-[var(--space-5)] lg:col-span-7">
                 <div className="flex flex-wrap items-center justify-between gap-[var(--space-3)]">
                   <div className="flex items-center gap-[var(--space-2)] text-[var(--accent-primary)]">
                     <Type className="h-4 w-4" aria-hidden="true" />
                     <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] font-semibold uppercase tracking-[var(--tracking-caps)]">
-                      Typography Pairings
+                      Typography Scale &amp; Pairings
                     </span>
                   </div>
                   <SegmentedControl
@@ -1271,29 +1789,75 @@ ln -s AGENTS.md CLAUDE.md
                 </div>
 
                 <SurfaceCard>
-                  <SurfaceCardContent className="space-y-[var(--space-4)] pt-[var(--space-6)]">
-                    <p className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] uppercase tracking-[var(--tracking-caps)] text-[var(--accent-primary)]">
-                      Active Preset · data-typography=&quot;{typography}&quot;
-                    </p>
-                    <p className="font-[family-name:var(--font-display)] text-[length:var(--text-3xl)] font-semibold leading-[var(--leading-tight)] tracking-[var(--tracking-tight)]">
-                      Intentional hierarchy through scale, weight, and tracking.
-                    </p>
-                    <p className="text-[length:var(--text-sm)] leading-[var(--leading-relaxed)] text-[var(--text-secondary)]">
-                      Defaulting to Inter or Geist without review is prohibited. Pair{" "}
-                      <code className="font-[family-name:var(--font-mono)]">Newsreader</code>,{" "}
-                      <code className="font-[family-name:var(--font-mono)]">IBM Plex Sans</code>, or{" "}
-                      <code className="font-[family-name:var(--font-mono)]">Plus Jakarta Sans</code>{" "}
-                      with{" "}
-                      <code className="font-[family-name:var(--font-mono)]">IBM Plex Mono</code>{" "}
-                      for technical metadata and{" "}
-                      <code className="font-[family-name:var(--font-mono)]">.tabular-nums</code>.
-                    </p>
+                  <SurfaceCardContent className="space-y-[var(--space-5)] pt-[var(--space-6)]">
+                    {TYPOGRAPHY_SCALE.map((row) => (
+                      <div
+                        key={row.token}
+                        className="space-y-1.5 border-b border-[var(--border-subtle)] pb-[var(--space-4)] last:border-b-0 last:pb-0"
+                      >
+                        <div className="flex flex-wrap items-center justify-between gap-2 font-[family-name:var(--font-mono)] text-[11px] text-[var(--text-muted)]">
+                          <span className="font-semibold text-[var(--text-secondary)]">
+                            {row.token}
+                          </span>
+                          <span className="tabular-nums">{row.spec} · {row.role}</span>
+                        </div>
+                        <p className={row.className}>{row.sample}</p>
+                      </div>
+                    ))}
                   </SurfaceCardContent>
                   <SurfaceCardFooter className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-[var(--text-muted)]">
-                    <span>tokens/typography.css</span>
+                    <span>tokens/typography.css · {typography}</span>
                     <span className="tabular-nums">0123456789 · tabular-nums</span>
                   </SurfaceCardFooter>
                 </SurfaceCard>
+              </div>
+            </div>
+
+            {/* Border Radius & Elevation Visualizers */}
+            <div className="grid grid-cols-1 gap-[var(--space-8)] border-t border-[var(--border-subtle)] pt-[var(--space-10)] lg:grid-cols-12">
+              <div className="space-y-[var(--space-4)] lg:col-span-7">
+                <h3 className="font-[family-name:var(--font-display)] text-[length:var(--text-2xl)] font-semibold tracking-[var(--tracking-tight)]">
+                  Concentric Border Radius Scale
+                </h3>
+                <div className="grid grid-cols-2 gap-[var(--space-4)] sm:grid-cols-3">
+                  {RADIUS_TOKENS.map((item) => (
+                    <div
+                      key={item.token}
+                      className="flex flex-col justify-between gap-[var(--space-3)] border border-[var(--border-default)] bg-[var(--surface-elevated)] p-[var(--space-4)]"
+                      style={{ borderRadius: `var(${item.token})` }}
+                    >
+                      <div className="flex items-center justify-between font-[family-name:var(--font-mono)] text-[11px]">
+                        <span className="font-semibold text-[var(--accent-primary)]">{item.px}</span>
+                        <span className="text-[var(--text-muted)]">{item.token}</span>
+                      </div>
+                      <p className="text-[length:var(--text-xs)] text-[var(--text-secondary)]">
+                        {item.role}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-[var(--space-4)] lg:col-span-5">
+                <h3 className="font-[family-name:var(--font-display)] text-[length:var(--text-2xl)] font-semibold tracking-[var(--tracking-tight)]">
+                  Neutral Hairline Elevation
+                </h3>
+                <div className="space-y-[var(--space-4)] rounded-[var(--radius-xl)] border border-[var(--border-subtle)] bg-[var(--surface-sunken)] p-[var(--space-5)]">
+                  {ELEVATION_TOKENS.map((elev) => (
+                    <div
+                      key={elev.token}
+                      className={`rounded-[var(--radius-lg)] border border-[var(--border-default)] p-[var(--space-4)] ${elev.surface}`}
+                      style={{ boxShadow: `var(${elev.token})` }}
+                    >
+                      <p className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] font-semibold text-[var(--text-primary)]">
+                        {elev.token}
+                      </p>
+                      <p className="mt-1 text-[length:var(--text-xs)] text-[var(--text-secondary)]">
+                        {elev.role}
+                      </p>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
 
@@ -1338,6 +1902,74 @@ ln -s AGENTS.md CLAUDE.md
           </div>
         </section>
 
+        {/* Interactive MotionDrawer Instance */}
+        <MotionDrawer
+          open={drawerOpen}
+          onOpenChange={setDrawerOpen}
+          eyebrow="components/motion/MotionDrawer.tsx"
+          title="Runtime Token Inspector"
+          description="Drag down on the handle or press Escape to dismiss and restore focus to the trigger button."
+          footer={
+            <>
+              <ActionButton
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  setTheme((prev) => (prev === "light" ? "dark" : "light"))
+                }
+              >
+                Toggle {theme === "light" ? "Dark" : "Light"}
+              </ActionButton>
+              <ActionButton
+                variant="primary"
+                size="sm"
+                onClick={() => setDrawerOpen(false)}
+              >
+                Done
+              </ActionButton>
+            </>
+          }
+        >
+          <div className="space-y-[var(--space-4)]">
+            <div className="grid grid-cols-2 gap-[var(--space-3)]">
+              <div className="rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--surface-sunken)] p-[var(--space-3)]">
+                <span className="font-[family-name:var(--font-mono)] text-[11px] text-[var(--text-muted)]">
+                  Active Palette
+                </span>
+                <p className="mt-1 font-[family-name:var(--font-display)] text-[length:var(--text-base)] font-semibold text-[var(--accent-primary)]">
+                  {activePaletteInfo.name}
+                </p>
+              </div>
+              <div className="rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--surface-sunken)] p-[var(--space-3)]">
+                <span className="font-[family-name:var(--font-mono)] text-[11px] text-[var(--text-muted)]">
+                  Typography Preset
+                </span>
+                <p className="mt-1 font-[family-name:var(--font-display)] text-[length:var(--text-base)] font-semibold capitalize text-[var(--text-primary)]">
+                  {typography}
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-2 rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--surface-sunken)] p-[var(--space-4)]">
+              <span className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[var(--tracking-caps)] text-[var(--text-muted)]">
+                Switch Palette Inside Sheet
+              </span>
+              <div className="flex flex-wrap gap-2 pt-1">
+                {PALETTE_PRESETS.map((preset) => (
+                  <ActionButton
+                    key={preset.id}
+                    size="sm"
+                    variant={palette === preset.id ? "primary" : "outline"}
+                    onClick={() => setPalette(preset.id)}
+                  >
+                    {preset.name}
+                  </ActionButton>
+                ))}
+              </div>
+            </div>
+          </div>
+        </MotionDrawer>
+
         {/* Minimal Footer */}
         <footer className="border-t border-[var(--border-subtle)] bg-[var(--surface-sunken)] py-[var(--space-8)]">
           <div className="mx-auto flex max-w-[var(--container-ui)] flex-wrap items-center justify-between gap-[var(--space-4)] px-[var(--space-4)] text-[length:var(--text-xs)] text-[var(--text-secondary)] sm:px-[var(--space-6)] lg:px-[var(--space-8)]">
@@ -1348,7 +1980,7 @@ ln -s AGENTS.md CLAUDE.md
             <div className="flex items-center gap-[var(--space-4)] font-[family-name:var(--font-mono)]">
               <span className="inline-flex items-center gap-1">
                 <Code2 className="h-3.5 w-3.5" aria-hidden="true" />
-                registry.json
+                registry.json (22)
               </span>
               <span className="inline-flex items-center gap-1">
                 <Lock className="h-3.5 w-3.5" aria-hidden="true" />

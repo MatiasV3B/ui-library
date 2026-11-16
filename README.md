@@ -26,7 +26,7 @@ ui-library/
 │           └── SKILL.md             # Antigravity skill enforcing registry & guideline discovery
 ├── registry.json                    # Central shadcn-format component & token index
 ├── tokens/
-│   ├── colors.css                   # Light/dark semantic surfaces, 1px borders, single primary accent
+│   ├── colors.css                   # Light/dark semantic surfaces + 5 [data-palette] single-accent presets
 │   ├── typography.css               # Intentional pairings, fluid display scale, tabular-nums
 │   └── spacing-motion.css           # 4/8px spacing, concentric radii, Apple easing & spring tokens
 ├── primitives/                      # Layer 1: Accessible, unopinionated base components
@@ -34,9 +34,9 @@ ui-library/
 │   ├── radix/                       # ActionButton, SurfaceCard composable primitives
 │   └── animate-primitives/          # Drop-in Animate UI primitives
 ├── components/                      # Layer 2: Curated, production-ready UI pieces
-│   ├── motion/                      # TactileTabs, AppStoreCard, StickyProductShowcase
-│   ├── 21st-dev/                    # Filtered & token-refactored 21st.dev components
-│   ├── data-viz/                    # KpiMetricCard with right-aligned tabular-nums
+│   ├── motion/                      # TactileTabs, AppStoreCard, StickyProductShowcase, MotionDrawer, AnimatedNumber
+│   ├── 21st-dev/                    # SegmentedControl, ActionSearchBar, FileTree, ScrollProgress, PricingSelector, StatusTag, CommandPromptInput
+│   ├── data-viz/                    # KpiMetricCard & BarDistribution with tabular-nums
 │   └── feedback/                    # EmptyState, ErrorNotice, SkeletonBlock
 ├── patterns/                        # Layer 3: Full page sections & application shells
 │   ├── hero-editorial/              # Asymmetric editorial split hero + README guide
@@ -59,19 +59,17 @@ ui-library/
 2. **Antigravity Skill (`.agent/skills/ui-libary/SKILL.md`)**:
    Forces the agent to read `AGENTS.md`, `registry.json`, `tokens/`, and `guidelines/` before writing UI, then run the 6-point Section 4 audit before returning code.
 3. **Meta Astryx + Curated 21st.dev Workflow**:
-   Import `tokens/colors.css` first so Astryx aliases (`--background`, `--foreground`, `--primary`, `--border`, `--ring`) and `21st-dev/` components share identical brand variables. Customize via CSS tokens or Tailwind `className` overrides before using `astryx swizzle` inside `primitives/astryx/`.
+   Import `tokens/colors.css` first so Astryx aliases (`--background`, `--foreground`, `--primary`, `--border`, `--ring`) and `21st-dev/` components share identical brand variables. Customize via `[data-palette]` (`cobalt`, `pine`, `vermilion`, `amber`, `ink`) or CSS tokens before using `astryx swizzle` inside `primitives/astryx/`.
 
-## Component & Pattern Inventory
+## Component & Pattern Inventory (22 Registry Items)
 
 | Layer | Name | Highlights | Source |
 | --- | --- | --- | --- |
-| Tokens | `design-tokens` | Light/dark WCAG >= 4.5:1 palette, 3 font pairings, Apple motion curves | [tokens/](tokens/) |
+| Tokens | `design-tokens` | 5 light/dark WCAG >= 4.5:1 palettes (`cobalt`, `pine`, `vermilion`, `amber`, `ink`), 3 font pairings, Apple motion curves | [tokens/](tokens/) |
 | Primitives | `ActionButton`, `SurfaceCard` | Tactile `0.97` tap scale, crisp `1px` borders, composable subcomponents | [primitives/radix/](primitives/radix/) |
-| Motion | `TactileTabs` | `tabs` / `dock` modes, `layoutId` pill (`380/32/0.8`), WAI-ARIA arrow nav | [TactileTabs.tsx](components/motion/TactileTabs.tsx) |
-| Motion | `AppStoreCard` | Shared `layoutId`, `AnimatePresence mode="popLayout"`, `drag="y"` dismiss | [AppStoreCard.tsx](components/motion/AppStoreCard.tsx) |
-| Motion | `StickyProductShowcase` | `useScroll` + `useTransform` + `clip-path` aperture inside sticky viewport | [StickyProductShowcase.tsx](components/motion/StickyProductShowcase.tsx) |
-| Curated 21st.dev | `SegmentedControl`, `ActionSearchBar`, `FileTree`, `ScrollProgress`, `PricingSelector` | Filtered from raw 21st.dev pieces, stripped of neon/glow slop, wired to `tokens/` | [components/21st-dev/](components/21st-dev/) |
-| Data & Feedback | `KpiMetricCard`, `EmptyState`, `ErrorNotice`, `SkeletonBlock` | Right-aligned `tabular-nums`, layout-matched skeletons, explicit error recovery | [components/data-viz/](components/data-viz/) |
+| Motion | `TactileTabs`, `AppStoreCard`, `StickyProductShowcase`, `MotionDrawer`, `AnimatedNumber` | Shared `layoutId`, `AnimatePresence mode="popLayout"`, `drag="y"` sheets, `useScroll` aperture, `tabular-nums` counters | [components/motion/](components/motion/) |
+| Curated 21st.dev | `SegmentedControl`, `ActionSearchBar`, `FileTree`, `ScrollProgress`, `PricingSelector`, `StatusTag`, `CommandPromptInput` | Filtered from raw 21st.dev pieces, stripped of neon/glow slop, wired to `tokens/` | [components/21st-dev/](components/21st-dev/) |
+| Data & Feedback | `KpiMetricCard`, `BarDistribution`, `EmptyState`, `ErrorNotice`, `SkeletonBlock` | Right-aligned `tabular-nums`, interactive bar scrubbing, layout-matched skeletons, explicit error recovery | [components/data-viz/](components/data-viz/) |
 | Patterns | `HeroEditorial`, `DashboardShell`, `AuthMinimal` | Complete sections paired with local `README.md` usage guides | [patterns/](patterns/) |
 
 ## Running Locally & Deploying to GitHub Pages

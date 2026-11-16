@@ -7,7 +7,7 @@
       "name": "design-tokens",
       "type": "registry:style",
       "title": "UI-Libary Design Tokens",
-      "description": "Semantic light/dark CSS variables, intentional typography pairings, concentric border radii, and Apple-calibrated motion curves.",
+      "description": "Semantic light/dark CSS variables with 5 single-accent palette presets (cobalt, pine, vermilion, amber, ink), intentional typography pairings, concentric border radii, and Apple-calibrated motion curves.",
       "files": [
         {
           "path": "tokens/colors.css",
@@ -109,6 +109,34 @@
       ]
     },
     {
+      "name": "motion-drawer",
+      "type": "registry:component",
+      "title": "Motion Sheet Drawer",
+      "description": "Apple-style draggable sheet with drag='y' elastic bounce, fluid spring (240/28), Escape key support, and automatic focus restoration.",
+      "dependencies": ["motion", "lucide-react"],
+      "registryDependencies": ["design-tokens", "motion-tokens"],
+      "files": [
+        {
+          "path": "components/motion/MotionDrawer.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "animated-number",
+      "type": "registry:component",
+      "title": "Animated Tabular Number",
+      "description": "Viewport-triggered numeric counter using tabular-nums, Apple deceleration curve, and reduced-motion compliance.",
+      "dependencies": ["motion"],
+      "registryDependencies": ["design-tokens", "motion-tokens"],
+      "files": [
+        {
+          "path": "components/motion/AnimatedNumber.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
       "name": "segmented-control",
       "type": "registry:component",
       "title": "Segmented Control",
@@ -179,6 +207,34 @@
       ]
     },
     {
+      "name": "status-tag",
+      "type": "registry:component",
+      "title": "Status Tag & Removable Tag Group",
+      "description": "Curated 21st.dev status pill and animated removable tag chips using layout + AnimatePresence mode='popLayout'.",
+      "dependencies": ["motion", "lucide-react"],
+      "registryDependencies": ["design-tokens", "motion-tokens"],
+      "files": [
+        {
+          "path": "components/21st-dev/StatusTag.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "command-prompt-input",
+      "type": "registry:component",
+      "title": "Command Prompt Input",
+      "description": "Curated 21st.dev multi-line prompt composer with layoutId mode switcher, Enter submit, and tactile send action.",
+      "dependencies": ["motion", "lucide-react"],
+      "registryDependencies": ["design-tokens", "motion-tokens"],
+      "files": [
+        {
+          "path": "components/21st-dev/CommandPromptInput.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
       "name": "kpi-metric-card",
       "type": "registry:component",
       "title": "KPI Metric Card",
@@ -188,6 +244,20 @@
       "files": [
         {
           "path": "components/data-viz/KpiMetricCard.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "bar-distribution",
+      "type": "registry:component",
+      "title": "Bar Distribution Chart",
+      "description": "Swiss telemetry bar chart with interactive keyboard/hover inspection, tabular-nums readout, and GPU scaleY entrance.",
+      "dependencies": ["motion"],
+      "registryDependencies": ["design-tokens", "motion-tokens"],
+      "files": [
+        {
+          "path": "components/data-viz/BarDistribution.tsx",
           "type": "registry:component"
         }
       ]
